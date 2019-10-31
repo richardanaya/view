@@ -28,3 +28,25 @@ let v = VStack { direction: LEFT_TO_RIGHT, children: {
   children
 }, ..Default::default() };
 ```
+
+This project really isn't framework specific, but it does have certain rules about components
+
+* they must implement default if you want property based constructure
+* they must have a 'new' constructor if you want simple constructure
+* they must have an property AnyVec 'children' if children can be added
+
+Here's a simple example to follow:
+
+```rust
+#[derive(Default)]
+struct VStack {
+  direction: u8,
+  children: AnyVec
+}
+
+impl VStack {
+  fn new(direction:u8){
+    ...
+  }
+}
+```
