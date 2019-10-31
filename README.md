@@ -43,10 +43,9 @@ let v = {
 
 This project really isn't framework specific, but it does have certain rules about components
 
-* they must implement default if you want property based construction
+* they must implement Default if you want property based construction
 * they must have a 'new' constructor if you want simple construction
-* they must implement Component trait
-* they must have custom construct behavior if children are pregenerated
+* they must implement Component trait to handle children (or derive if you do nothing with children)
 
 Here's a simple example to follow:
 
