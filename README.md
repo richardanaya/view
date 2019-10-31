@@ -5,14 +5,14 @@ A macro for constructing views.
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
-  // components with children
+  // views with children
   VStack(direction:TOP_TO_BOTTOM) {
-    // simple component construction
+    // simple view construction
     Image("company.png") 
-    // complex component construction
+    // complex viw construction
     Button(text:"order".to_owned(),style:BOLD) 
       .on_click(|x|{console_log("ordered!")})
-    // construction from iterables
+    // views from iterables
     ( Image::from_names(images) ) 
   }
 };
@@ -49,7 +49,7 @@ This project really isn't framework specific, but it does have certain rules abo
 
 * they must implement Default if you want property based construction
 * they must have a 'new' constructor if you want simple construction
-* they must implement Component trait to handle children (or derive if you do nothing with children)
+* they must implement View trait to handle children (or derive if you do nothing with children)
 
 Here's a simple example to follow:
 
@@ -66,7 +66,7 @@ impl VStack {
   }
 }
 
-impl Component for VStack{
+impl View for VStack{
   fn construct(&mut self, children:Option<ViewList>) { 
     children = children.unwrap();
   }
