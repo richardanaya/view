@@ -13,6 +13,7 @@ let v = view!{
       }
     ( Image::from_names(images) ) 
   }
+  Footer
 };
 ```
 
@@ -42,6 +43,11 @@ let v = {
     for i in Image::from_names(images).into_iter() {
       children.push(i)
     }
+    children.push({
+      let o = Footer{ ..Default::default() };
+      o.construct(None)
+      o
+    });
     Some(children)
   });
   o
