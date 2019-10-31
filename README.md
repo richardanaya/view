@@ -3,12 +3,15 @@
 A macro for constructing views.
 
 ```rust
+let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
   VStack(direction:TOP_TO_BOTTOM){
+    Image("company.png")
     Button(text:"order".to_owned(),style:BOLD)
-      .on_click(|x|{console_log("hey")})
-    Image("coffee.png")
-    Image("cream.png")
+      .on_click(|x|{console_log("ordered!")})
+    (
+      images.iter().map(|x|{view!{Image("cream.png")}})
+    )
   }
 };
 ```
@@ -16,16 +19,18 @@ let v = view!{
 will translate to
 
 ```rust
+let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = VStack { direction: LEFT_TO_RIGHT, children: {
   let mut children = AnyVec::new();
+  children.push(Image::new("company.png"));
   children.push({
       let a = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
       a.on_click(|x|{console_log("hey")});
       a
     });
-  children.push(Button::new("b"));
-  children.push(Button::new("c"));
-  children
+  for i in images.iter().map(|x|{Image::new("cream.png")}).into_iter() {
+    children.push(i)
+  }
 }, ..Default::default() };
 ```
 
