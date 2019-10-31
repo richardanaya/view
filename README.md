@@ -48,11 +48,11 @@ let v = {
 };
 ```
 
-This project really isn't framework specific, but it does have certain rules about components
+This project really isn't framework specific, but it does have certain rules:
 
-* they must implement Default if you want property based construction
-* they must have a 'new' constructor if you want simple construction
-* they must have a function `fn construct(&mut self, children:Option<ViewList>)` implemented ( a View trait in included to help with this )
+* views must have a function `fn construct(&mut self, children:Option<ViewList>)` implemented ( a View trait in included to help with this )
+* views must implement Default if you want property based construction
+* views must have a 'new' constructor if you want simple construction
 
 Here's a simple example to follow:
 
