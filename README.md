@@ -4,8 +4,8 @@ A macro for constructing views.
 
 ```rust
 let v = view!{
-  VStack(direction:LEFT_TO_RIGHT){
-    Button(text:"a".to_owned(),style:BOLD)
+  VStack(direction:TOP_TO_BOTTOM){
+    Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{console_log("hey")})
     Image("coffee.png")
     Image("cream.png")
