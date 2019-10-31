@@ -73,9 +73,9 @@ impl View for VStack{
 }
 ```
 
-# Component
+# View trait
 ```rust
-trait Component {
+trait View {
   fn construct(&mut self, children:Option<ViewList>)
 }
 ```
