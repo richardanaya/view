@@ -9,7 +9,7 @@ let v = view!{
   VStack(direction:TOP_TO_BOTTOM) {
     // simple view construction
     Image("company.png") 
-    // complex viw construction
+    // complex view construction
     Button(text:"order".to_owned(),style:BOLD) 
       .on_click(|x|{console_log("ordered!")})
     // views from iterables
