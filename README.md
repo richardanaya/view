@@ -56,7 +56,7 @@ let v = {
 
 This project really isn't framework specific, but it does have certain rules:
 
-* views must have a function `fn construct(&mut self, children:Option<AnyVec>)` implemented ( a View trait in included to help with this )
+* views must have a function `fn construct(&mut self, children:Option<AnyVec>)` implemented ( a View trait is included to help with this )
 * views must implement Default if you want property based construction
 * views must have a 'new' constructor if you want simple construction
 
