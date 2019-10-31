@@ -1,6 +1,6 @@
 # view
 
-A macro for constructing views.
+A macro for constructing views that is non framework specific.
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
