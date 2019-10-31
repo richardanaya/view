@@ -81,3 +81,10 @@ trait View {
   fn construct(&mut self, children:Option<ViewList>)
 }
 ```
+
+A derive macro can be used if your component does nothing with children
+
+```
+#[derive(View,Default)]
+struct Button(text:String)
+```
