@@ -22,7 +22,7 @@ will translate to
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = { 
-  let o = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }
+  let o = VStack { direction: TOP_TO_BOTTOM, ..Default::default() }
   o.construct({
     let mut children = AnyVec::new();
     children.push({
