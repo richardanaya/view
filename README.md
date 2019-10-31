@@ -32,12 +32,12 @@ let v = {
     });
     children.push({
       let o = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
+      o.on_click(|x|{ do_order() });
       o.construct(Some({
         let o = Image::new("order_icon.png");
         o.construct(None)
         o
       }));
-      o.on_click(|x|{ do_order() });
       o
     });
     for i in Image::from_names(images).into_iter() {
