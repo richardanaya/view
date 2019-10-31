@@ -3,7 +3,6 @@
 ```toml
 [dependencies]
 view = "0.0"
-anyvec = "0.2.1"
 ```
 
 A macro for constructing views that is non framework specific.
