@@ -23,8 +23,8 @@ let v = VStack { direction: LEFT_TO_RIGHT, children: {
       a.on_click(|x|{console_log("hey")});
       a
     });
-  children.push(Button::new("b".to_owned()));
-  children.push(Button::new("c".to_owned()));
+  children.push(Button::new("b"));
+  children.push(Button::new("c"));
   children
 }, ..Default::default() };
 ```
