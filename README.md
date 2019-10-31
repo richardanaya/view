@@ -79,20 +79,3 @@ impl VStack {
   }
 }
 ```
-
-# View trait
-
-An optional helper trait exists for defining view behavior.
-
-```rust
-trait View {
-  fn construct(&mut self, children:Option<AnyVec>)
-}
-```
-
-A derive macro can be used if your component does nothing with children
-
-```rust
-#[derive(View,Default)]
-struct Button(text:String)
-```
