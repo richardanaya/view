@@ -10,7 +10,7 @@ let v = view!{
     Button(text:"b".to_owned())
     Button(text:"c".to_owned())
   }
-}
+};
 ```
 
 will translate to
