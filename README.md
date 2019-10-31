@@ -9,7 +9,7 @@ let v = view!{
     Image("company.png")
     Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{console_log("ordered!")})
-    ( images.into<Vec<Image>>() )
+    ( images.into::<Vec<Image>>() )
   }
 };
 ```
