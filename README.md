@@ -9,7 +9,7 @@ let v = view!{
     Image("company.png")
     Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{console_log("ordered!")})
-    ( images.into::<Vec<Image>>() )
+    ( Image::from_names(images) )
   }
 };
 ```
@@ -18,19 +18,27 @@ will translate to
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
-let v = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }.construct({
-  let mut children = ViewList::new();
-  children.push(Image::new("company.png"));
-  children.push({
-      let a = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
-      a.on_click(|x|{console_log("hey")});
-      a
+let v = { 
+  let o = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }
+  o.construct({
+    let mut children = ViewList::new();
+    children.push({
+      let o = Image::new("company.png");
+      o.construct(None)
+      o
     });
-  for i in images.into<Vec<Image>>().into_iter() {
-    children.push(i)
-  }
-  children
-});
+    children.push({
+      let o = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
+      o.construct(None);
+      o.on_click(|x|{console_log("hey")});
+      o
+    });
+    for i in Image::from_names(images).into_iter() {
+      children.push(i)
+    }
+    Some(children)
+  });
+  o};
 ```
 
 This project really isn't framework specific, but it does have certain rules about components
