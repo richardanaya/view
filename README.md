@@ -40,7 +40,7 @@ let v = {
         o.construct(None)
         o
       }));
-      o.do_order(|x|{console_log("hey")});
+      o.on_click(|x| do_order() );
       o
     });
     for i in Image::from_names(images).into_iter() {
