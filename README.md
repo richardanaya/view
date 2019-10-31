@@ -58,7 +58,7 @@ Here's a simple example to follow:
 #[derive(Default)]
 struct VStack {
   direction: u8,
-  children: ViewList
+  children: AnyVec
 }
 
 impl VStack {
@@ -66,7 +66,7 @@ impl VStack {
     ...
   }
   
-  fn construct(&mut self, children:Option<ViewList>) { 
+  fn construct(&mut self, children:Option<AnyVec>) { 
     self.children = children.unwrap();
   }
 }
@@ -78,7 +78,7 @@ An optional helper trait exists for defining view behavior.
 
 ```rust
 trait View {
-  fn construct(&mut self, children:Option<ViewList>)
+  fn construct(&mut self, children:Option<AnyVec>)
 }
 ```
 
