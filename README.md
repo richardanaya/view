@@ -74,7 +74,7 @@ impl VStack {
 
 # View trait
 
-An optional helper trait exists for defining view behavior
+An optional helper trait exists for defining view behavior.
 
 ```rust
 trait View {
