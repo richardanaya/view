@@ -16,13 +16,15 @@ let v = view!{
 will translate to
 
 ```rust
-let v = VStack { direction: LEFT_TO_RIGHT, children: vec![
-  {
-    let a = Button { text: "a".to_owned(), ..Default::default() };
-    a.on_click(|x|{console_log("hey")});
-    a
-  },
-  Button { text: "b".to_owned(), ..Default::default() },
-  Button { text: "c".to_owned(), ..Default::default() },
-], ..Default::default() };
+let v = VStack { direction: LEFT_TO_RIGHT, children: {
+  let mut children = AnyVec::new();
+  children.push({
+      let a = Button { text: "a".to_owned(), ..Default::default() };
+      a.on_click(|x|{console_log("hey")});
+      a
+    });
+  children.push(Button { text: "b".to_owned(), ..Default::default() });
+  children.push(Button { text: "c".to_owned(), ..Default::default() });
+  children
+}, ..Default::default() };
 ```
