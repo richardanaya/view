@@ -11,7 +11,7 @@ let v = view!{
     Image("company.png") 
     // complex view construction
     Button(text:"order".to_owned(),style:BOLD)
-      .on_click(|x| do_order() ){
+      .on_click(|x|{ do_order() }){
         Image("order_icon.png")
        }
     // views from iterables
@@ -40,7 +40,7 @@ let v = {
         o.construct(None)
         o
       }));
-      o.on_click(|x| do_order() );
+      o.on_click(|x|{ do_order() });
       o
     });
     for i in Image::from_names(images).into_iter() {
