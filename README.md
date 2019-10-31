@@ -10,8 +10,10 @@ let v = view!{
     // simple view construction
     Image("company.png") 
     // complex view construction
-    Button(text:"order".to_owned(),style:BOLD) 
-      .on_click(|x|{console_log("ordered!")})
+    Button(text:"order".to_owned(),style:BOLD)
+      .on_click(|x|{console_log("ordered!")}){
+        Image("order_icon.png")
+       }
     // views from iterables
     ( Image::from_names(images) ) 
   }
