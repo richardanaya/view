@@ -50,7 +50,7 @@ This project really isn't framework specific, but it does have certain rules abo
 
 * they must implement Default if you want property based construction
 * they must have a 'new' constructor if you want simple construction
-* they must implement View trait to handle children (or derive if you do nothing with children)
+* they must have a function `fn construct(&mut self, children:Option<ViewList>)` implemented ( a View trait in included to help with this )
 
 Here's a simple example to follow:
 
