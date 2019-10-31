@@ -56,9 +56,8 @@ impl VStack {
 }
 
 impl Component for VStack{
-  fn construct(&self, children:Option<ViewList>) -> Self{ 
+  fn construct(&mut self, children:Option<ViewList>) { 
     children = children.unwrap();
-    self
   }
 }
 ```
@@ -66,6 +65,6 @@ impl Component for VStack{
 # Component
 ```rust
 trait Component {
-  fn construct(&self, children:Option<ViewList>) -> Self
+  fn construct(&mut self, children:Option<ViewList>)
 }
 ```
