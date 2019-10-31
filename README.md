@@ -7,8 +7,8 @@ let v = view!{
   VStack(direction:LEFT_TO_RIGHT){
     Button(text:"a".to_owned(),style:BOLD)
       .on_click(|x|{console_log("hey")})
-    Button("b")
-    Button("c")
+    Image("coffee.png")
+    Image("cream.png")
   }
 };
 ```
