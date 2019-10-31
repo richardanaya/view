@@ -1,12 +1,9 @@
-#![no_std]
-extern crate alloc;
-use view::*;
-
 #[derive(Default)]
 struct Button{}
 
 #[cfg(test)]
 mod tests {
+    use view::*;
     use crate::*;
 
     #[test]
