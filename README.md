@@ -6,7 +6,7 @@ A macro for constructing views.
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
   // components with children
-  VStack(direction:TOP_TO_BOTTOM){
+  VStack(direction:TOP_TO_BOTTOM) {
     // simple component construction
     Image("company.png") 
     // complex component construction
