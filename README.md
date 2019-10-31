@@ -31,8 +31,8 @@ let v = VStack { direction: LEFT_TO_RIGHT, children: {
 
 This project really isn't framework specific, but it does have certain rules about components
 
-* they must implement default if you want property based constructure
-* they must have a 'new' constructor if you want simple constructure
+* they must implement default if you want property based construction
+* they must have a 'new' constructor if you want simple construction
 * they must have an property AnyVec 'children' if children can be added
 
 Here's a simple example to follow:
