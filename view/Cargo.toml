@@ -9,4 +9,4 @@ repository = "https://github.com/richardanaya/view/"
 
 [dependencies]
 proc-macro-hack = "0.5"
-view_macro = {path="../view_macro"}
+view_macro = "0.0.3"
