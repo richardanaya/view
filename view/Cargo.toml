@@ -5,6 +5,7 @@ authors = ["Richard Anaya"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
 description = "a macro for constructing views"
+repository = "https://github.com/richardanaya/view/"
 
 [lib]
 proc-macro = true
