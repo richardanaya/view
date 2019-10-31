@@ -9,7 +9,7 @@ let v = view!{
     Image("company.png")
     Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{console_log("ordered!")})
-    ( Images::from_paths(images) )
+    ( Image::from_paths(images) )
   }
 };
 ```
