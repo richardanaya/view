@@ -33,8 +33,8 @@ let v = {
     });
     children.push({
       let o = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
-      o.construct(None);
       o.on_click(|x|{console_log("hey")});
+      o.construct(None);
       o
     });
     for i in Image::from_names(images).into_iter() {
