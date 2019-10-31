@@ -3,7 +3,7 @@ name = "view"
 version = "0.0.1"
 authors = ["Richard Anaya"]
 edition = "2018"
-license = "MIT or Apache-2.0"
+license = "MIT"
 description = "a macro for constructing views"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
