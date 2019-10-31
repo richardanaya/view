@@ -65,9 +65,7 @@ impl VStack {
   fn new(direction:u8){
     ...
   }
-}
-
-impl View for VStack{
+  
   fn construct(&mut self, children:Option<ViewList>) { 
     self.children = children.unwrap();
   }
