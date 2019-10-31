@@ -68,7 +68,7 @@ impl VStack {
 
 impl View for VStack{
   fn construct(&mut self, children:Option<ViewList>) { 
-    children = children.unwrap();
+    self.children = children.unwrap();
   }
 }
 ```
