@@ -19,7 +19,7 @@ will translate to
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }.construct({
-  let mut children = AnyVec::new();
+  let mut children = ViewList::new();
   children.push(Image::new("company.png"));
   children.push({
       let a = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
@@ -46,7 +46,7 @@ Here's a simple example to follow:
 #[derive(Default)]
 struct VStack {
   direction: u8,
-  children: AnyVec
+  children: ViewList
 }
 
 impl VStack {
@@ -56,5 +56,12 @@ impl VStack {
   fn construct(self,children:ViewList) {
   
   }
+}
+```
+
+# Component
+```rust
+trait Component {
+  fn construct(&self, children:ViewList)
 }
 ```
