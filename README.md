@@ -9,7 +9,7 @@ let v = view!{
     Image("company.png")
     Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{console_log("ordered!")})
-    ( Images::from_vec(images) )
+    ( Images::from_paths(images) )
   }
 };
 ```
@@ -26,7 +26,7 @@ let v = VStack { direction: LEFT_TO_RIGHT, children: {
       a.on_click(|x|{console_log("hey")});
       a
     });
-  for i in Images::from_vec(images).into_iter() {
+  for i in Images::from_paths(images).into_iter() {
     children.push(i)
   }
 }, ..Default::default() };
