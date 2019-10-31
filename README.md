@@ -25,7 +25,7 @@ let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = { 
   let o = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }
   o.construct({
-    let mut children = ViewList::new();
+    let mut children = AnyVec::new();
     children.push({
       let o = Image::new("company.png");
       o.construct(None)
