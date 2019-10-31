@@ -5,16 +5,12 @@ A macro for constructing views that is non framework specific.
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
-  // views with children
   VStack(direction:TOP_TO_BOTTOM) {
-    // simple view construction
     Image("company.png") 
-    // complex view construction
     Button(text:"order".to_owned(),style:BOLD)
-      .on_click(|x|{ do_order() }){
-        Image("order_icon.png")
-       }
-    // views from iterables
+      .on_click(|x|{ do_order() }) { 
+        Image("order_icon.png") 
+      }
     ( Image::from_names(images) ) 
   }
 };
