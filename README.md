@@ -46,6 +46,7 @@ This project really isn't framework specific, but it does have certain rules abo
 * they must implement Default if you want property based construction
 * they must have a 'new' constructor if you want simple construction
 * they must implement Component trait to handle children (or derive if you do nothing with children)
+* alternatively, just implementing construct to take in AnyVec of children should be enough
 
 Here's a simple example to follow:
 
