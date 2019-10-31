@@ -4,7 +4,7 @@ A macro for constructing views.
 
 ```rust
 view!{
-  VStack(direction:LeftToRight){
+  VStack(direction:LEFT_TO_RIGHT){
     Button(text:"a".to_owned()) {
       .on_click(|x|{console_log("hey")})
     }
@@ -17,7 +17,7 @@ view!{
 will translate to
 
 ```rust
-VStack { foo: 42, children: vec![
+VStack { direction: LEFT_TO_RIGHT, children: vec![
   {
     let a = Button { text: "a".to_owned(), ..Default::default() };
     a.on_click(|x|{console_log("hey")});
