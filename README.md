@@ -43,7 +43,7 @@ This project really isn't framework specific, but it does have certain rules abo
 Here's a simple example to follow:
 
 ```rust
-#[derive(Component,Default)]
+#[derive(Default)]
 struct VStack {
   direction: u8,
   children: ViewList
@@ -53,8 +53,11 @@ impl VStack {
   fn new(direction:u8){
     ...
   }
-  fn construct(self,children:ViewList) {
-  
+}
+
+impl Component for VStack{
+  fn construct(&self, children:Option<ViewList>) { 
+    children = children.unwrap();
   }
 }
 ```
