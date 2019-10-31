@@ -12,8 +12,8 @@ let v = view!{
         Image("order_icon.png") 
       }
     ( Image::from_names(images) ) 
+    Footer
   }
-  Footer
 };
 ```
 
