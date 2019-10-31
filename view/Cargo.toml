@@ -1,0 +1,10 @@
+[package]
+name = "view"
+version = "0.0.2"
+authors = ["Richard Anaya"]
+edition = "2018"
+license = "MIT"
+description = "a macro for constructing views"
+
+[lib]
+proc-macro = true

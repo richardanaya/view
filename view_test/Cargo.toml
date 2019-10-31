@@ -1,11 +1,10 @@
 [package]
-name = "view"
-version = "0.0.1"
-authors = ["Richard Anaya"]
+name = "view_test"
+version = "0.1.0"
+authors = ["richard <richard>"]
 edition = "2018"
-license = "MIT"
-description = "a macro for constructing views"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+view = {path="../view"}
