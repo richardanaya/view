@@ -42,7 +42,8 @@ let v = {
     }
     Some(children)
   });
-  o};
+  o
+};
 ```
 
 This project really isn't framework specific, but it does have certain rules about components
