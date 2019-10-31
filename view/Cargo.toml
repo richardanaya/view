@@ -3,7 +3,7 @@ name = "view"
 version = "0.0.2"
 authors = ["Richard Anaya"]
 edition = "2018"
-license = "MIT"
+license = "MIT OR Apache-2.0"
 description = "a macro for constructing views"
 
 [lib]
