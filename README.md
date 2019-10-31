@@ -8,6 +8,7 @@ view = "0.0"
 A macro for constructing views that is non framework specific.
 
 ```rust
+use view::*;
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
   VStack(direction:TOP_TO_BOTTOM) {
