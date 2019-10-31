@@ -5,11 +5,15 @@ A macro for constructing views.
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
-  VStack(direction:TOP_TO_BOTTOM){ // components with children
-    Image("company.png") // simple component construction
-    Button(text:"order".to_owned(),style:BOLD) // complex component construction
+  // components with children
+  VStack(direction:TOP_TO_BOTTOM){
+    // simple component construction
+    Image("company.png") 
+    // complex component construction
+    Button(text:"order".to_owned(),style:BOLD) 
       .on_click(|x|{console_log("ordered!")})
-    ( Image::from_names(images) ) // construction from iterables
+    // construction from iterables
+    ( Image::from_names(images) ) 
   }
 };
 ```
