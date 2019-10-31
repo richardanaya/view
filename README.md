@@ -18,7 +18,7 @@ will translate to
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
-let v = VStack { direction: LEFT_TO_RIGHT, children: {
+let v = VStack { direction: LEFT_TO_RIGHT, ..Default::default() }.construct({
   let mut children = AnyVec::new();
   children.push(Image::new("company.png"));
   children.push({
@@ -29,7 +29,8 @@ let v = VStack { direction: LEFT_TO_RIGHT, children: {
   for i in images.into<Vec<Image>>().into_iter() {
     children.push(i)
   }
-}, ..Default::default() };
+  children
+});
 ```
 
 This project really isn't framework specific, but it does have certain rules about components
@@ -50,6 +51,9 @@ struct VStack {
 impl VStack {
   fn new(direction:u8){
     ...
+  }
+  fn construct(self,children:ViewList) {
+  
   }
 }
 ```
