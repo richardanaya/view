@@ -62,6 +62,6 @@ impl VStack {
 # Component
 ```rust
 trait Component {
-  fn construct(&self, children:ViewList)
+  fn construct(&self, children:Option<ViewList>)
 }
 ```
