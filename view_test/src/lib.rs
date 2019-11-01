@@ -8,48 +8,64 @@ use vstack::VStack;
 
 pub enum View {
     Button(Button),
-    VStack(VStack)
+    VStack(VStack),
 }
-    
+
 #[test]
 fn basic_0() {
-    let _v = view!{
+    let o = view! {
         Button
     };
+    if let View::Button(_) = o {
+    } else {
+        panic!("should be a button")
+    }
 }
 
 #[test]
 fn basic_1() {
-    let v = view!{
+    let o = view! {
         VStack
     };
-    assert_eq!(0,v.children.len());
+    if let View::VStack(v) = o {
+        assert_eq!(0, v.children.len());
+    } else {
+        panic!("should be a vstack")
+    }
 }
 
 #[test]
 fn basic_2() {
-    let v = view!{
+    let o = view! {
         VStack {
             Button
         }
     };
-    assert_eq!(1,v.children.len());
+    if let View::VStack(v) = o {
+        assert_eq!(1, v.children.len());
+    } else {
+        panic!("should be a vstack")
+    }
 }
 
 #[test]
 fn basic_3() {
-    let v = view!{
+    let o = view! {
         VStack {
             Button
             Button
         }
     };
-    assert_eq!(2,v.children.len());
+    if let View::VStack(v) = o {
+        assert_eq!(2, v.children.len());
+    } else {
+        panic!("should be a vstack")
+    }
 }
 
 #[test]
 fn basic_4() {
-    let v = view!{
+    let o = view! {
         VStack {
             Button
             VStack {
@@ -58,5 +74,18 @@ fn basic_4() {
             }
         }
     };
-    assert_eq!(2,v.children.len());
+    if let View::VStack(v) = o {
+        assert_eq!(2, v.children.len());
+        if let View::Button(_) = &v.children[0] {
+        } else {
+            panic!("should be a button")
+        }
+        if let View::VStack(v2) = &v.children[1] {
+            assert_eq!(2, v2.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
+    } else {
+        panic!("should be a vstack")
+    }
 }
