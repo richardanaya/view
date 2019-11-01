@@ -18,9 +18,13 @@ let v = view!{
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
-    ForEach{ Image::from_names(images) }
+    For(i in images) { 
+        Image(i)
+    }
     Footer
-    If(show_legal){ Legal }
+    If(show_legal) { 
+      Legal 
+    }
   }
 };
 ```
