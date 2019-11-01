@@ -18,7 +18,7 @@ let v = view!{
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
-    For(i in images) { 
+    For(i in images.iter()) { 
         Image(i)
     }
     Footer
@@ -56,8 +56,12 @@ let v = {
       }));
       View::Button(o)
     });
-    for i in Image::from_names(images).into_iter() {
-      children.push(i)
+    for i in images.iter() {
+      children.push({
+        let o = Image::new(i);
+        o.construct(None)
+        View::Image(o)
+      });
     }
     children.push({
       let o = Footer{ ..Default::default() };
