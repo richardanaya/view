@@ -12,7 +12,7 @@ This example shows everything that's possible
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = view!{
-  VStack(direction:TOP_TO_BOTTOM) {
+  VStack {
     Image("company.png") 
     Button(text:"order".to_owned(),style:BOLD)
       .on_click(|x|{ do_order() }) { 
