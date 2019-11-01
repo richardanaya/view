@@ -18,13 +18,9 @@ let v = view!{
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
-    For(i in images.iter()) { 
-        Image(i)
-    }
+    For(i in images.iter()) { Image(i) }
     Footer
-    If(show_legal) { 
-      Legal 
-    }
+    If(show_legal) { Legal }
   }
 };
 ```
