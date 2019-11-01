@@ -29,7 +29,7 @@ Below is all the code this macro saves you from writing yourself.
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = { 
-  let o = VStack { direction: TOP_TO_BOTTOM, ..Default::default() }
+  let o = VStack { ..Default::default() }
   o.construct(Some({
     let mut children = vec![];
     children.push({
