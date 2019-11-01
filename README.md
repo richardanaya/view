@@ -5,7 +5,9 @@
 view = "0.0"
 ```
 
-A macro for constructing views that is non framework specific.
+Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views that is non framework specific. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some great ideas from SwiftUI.
+
+This example shows everything that's possible
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
@@ -22,7 +24,7 @@ let v = view!{
 };
 ```
 
-will translate to
+Below is all the code this macro saves you from writing yourself.
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
@@ -63,13 +65,13 @@ let v = {
 };
 ```
 
-This project really isn't framework specific, but it does have certain rules:
+This project isn't framework specific, but it does have a few rules:
 * you must specify an enum `View` that contains all views (this is so view containers can efficiently hold a variety of views)
-* views must have a function `fn construct(&mut self, children:Option<Vec<View>>)` implemented
+* views must have a function `fn construct(&mut self, children:Option<Vec<View>>)` implemented somehow
 * views must implement Default trait for property construction (e.g `Button(text:"click me".to_owned())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
-Here's a simple example to follow:
+Here's a basic example of implementing these rules, though they can be implemented in any way you choose.
 
 ```rust
 
@@ -107,3 +109,19 @@ impl Button {
   fn construct(&mut self, children:Option<Vec<View>>) {}
 }
 ```
+
+# License
+
+This project is licensed under either of
+
+ * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or
+   http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license ([LICENSE-MIT](LICENSE-MIT) or
+   http://opensource.org/licenses/MIT)
+
+at your option.
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in woke by you, as defined in the Apache-2.0 license, sh
