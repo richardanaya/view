@@ -1,4 +1,3 @@
-#![no_std]
 extern crate alloc;
 use proc_macro_hack::proc_macro_hack;
 
