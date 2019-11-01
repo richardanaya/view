@@ -60,27 +60,46 @@ let v = {
 ```
 
 This project really isn't framework specific, but it does have certain rules:
-
-* views must have a function `fn construct(&mut self, children:Option<AnyVec>)` implemented ( a View trait is included to help with this )
-* views must implement Default if you want property based construction
-* views must have a 'new' constructor if you want simple construction
+* you must specify an enum `View` that contains all variants of `Views` (this is so view containers can efficiently hold a variety of views)
+* views must have a function `fn construct(&mut self, children:Option<Vec<View>>)` implemented
+* views must implement Default for property construction (e.g `Button(text:"click me".to_owned())` )
+* views must have a 'new' constructor for simple construction (e.g `Button("click me")` )
 
 Here's a simple example to follow:
 
 ```rust
+
+enum View {
+  VStack(VStack)
+  Button(Button)
+}
+
 #[derive(Default)]
 struct VStack {
   direction: u8,
-  children: AnyVec
+  children: Vec<View>
 }
 
 impl VStack {
-  fn new(direction:u8){
-    ...
+  fn new(direction:u8) -> Self {
+    VStack{ direction:direction, children:vec![] }
   }
   
-  fn construct(&mut self, children:Option<AnyVec>) { 
+  fn construct(&mut self, children:Option<Vec<View>>) { 
     self.children = children.unwrap();
   }
+}
+
+#[derive(Default)]
+struct Button {
+  text:String
+}
+
+impl Button {
+  fn new(text:String) -> Self {
+    Button{text:text}
+  }
+  
+  fn construct(&mut self, children:Option<Vec<View>>) {}
 }
 ```
