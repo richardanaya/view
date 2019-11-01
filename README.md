@@ -31,6 +31,8 @@ Below is all the code this macro saves you from writing yourself.
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
+let show_legal = false;
+
 let v = { 
   let o = VStack { ..Default::default() }
   o.construct(Some({
