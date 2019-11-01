@@ -18,7 +18,7 @@ let v = view!{
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
-    ( Image::from_names(images) ) 
+    [ Image::from_names(images) ]
     Footer
   }
 };
