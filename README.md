@@ -60,7 +60,7 @@ let v = {
 ```
 
 This project really isn't framework specific, but it does have certain rules:
-* you must specify an enum `View` that contains all variants of `Views` (this is so view containers can efficiently hold a variety of views)
+* you must specify an enum `View` that contains all views (this is so view containers can efficiently hold a variety of views)
 * views must have a function `fn construct(&mut self, children:Option<Vec<View>>)` implemented
 * views must implement Default for property construction (e.g `Button(text:"click me".to_owned())` )
 * views must have a 'new' constructor for simple construction (e.g `Button("click me")` )
