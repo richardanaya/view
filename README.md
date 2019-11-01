@@ -5,7 +5,7 @@
 view = "0.0"
 ```
 
-Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views that is non framework specific. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some great ideas from SwiftUI.
+Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views that is non framework specific. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some ideas from SwiftUI.
 
 This example shows everything that's possible
 
