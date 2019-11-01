@@ -11,10 +11,12 @@ This example shows everything that's possible
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
+let show_legal = false;
+​
 let v = view!{
   VStack {
     Image("company.png") 
-    Button(text:"order".to_owned(),style:BOLD)
+    Button(text:"order".to_string(),style:BOLD)
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
