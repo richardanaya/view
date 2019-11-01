@@ -6,5 +6,7 @@ pub struct VStack {
 }
 
 impl VStack {
-    pub fn construct(&self, _children: Option<Vec<View>>) {}
+    pub fn construct(&mut self, children: Option<Vec<View>>) {
+        self.children = children.unwrap_or(vec![]);
+    }
 }
