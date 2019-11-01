@@ -28,22 +28,26 @@ will translate to
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let v = { 
   let o = VStack { direction: TOP_TO_BOTTOM, ..Default::default() }
-  o.construct({
-    let mut children = AnyVec::new();
+  o.construct(Some({
+    let mut children = vec![];
     children.push({
       let o = Image::new("company.png");
       o.construct(None)
-      o
+      View::Image(o)
     });
     children.push({
       let o = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
       o.on_click(|x|{ do_order() });
       o.construct(Some({
-        let o = Image::new("order_icon.png");
-        o.construct(None)
-        o
+        let mut children = vec![];
+        children.push({
+          let o = Image::new("order_icon.png");
+          o.construct(None)
+          View::Image(o)
+        });
+        children
       }));
-      o
+      View::Button(o)
     });
     for i in Image::from_names(images).into_iter() {
       children.push(i)
@@ -51,11 +55,11 @@ let v = {
     children.push({
       let o = Footer{ ..Default::default() };
       o.construct(None)
-      o
+      View::Footer(o)
     });
     Some(children)
-  });
-  o
+  }));
+  View::VStack(o)
 };
 ```
 
