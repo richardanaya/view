@@ -18,8 +18,9 @@ let v = view!{
       .on_click(|x|{ do_order() }) { 
         Image("order_icon.png") 
       }
-    [ Image::from_names(images) ]
+    ForEach{ Image::from_names(images) }
     Footer
+    If(show_legal){ Legal }
   }
 };
 ```
@@ -59,6 +60,13 @@ let v = {
       o.construct(None)
       View::Footer(o)
     });
+    if show_legal {
+      children.push({
+        let o = Legal{ ..Default::default() };
+        o.construct(None)
+        View::Legal(o)
+      });
+    }
     Some(children)
   }));
   View::VStack(o)
