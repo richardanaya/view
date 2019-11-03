@@ -16,7 +16,7 @@ let v = view!{
   VStack {
     Image("company.png") 
     Button(text:"order".to_string(),style:BOLD)
-      .on_click(|x|{ do_order() }) { 
+      .on_click(Box::new(|| do_order() }) { 
         Image("order_icon.png") 
       }
     For(i in images.iter()) { Image(i) }
@@ -49,6 +49,7 @@ let v = {
                 style: BOLD,
                 ..Default::default()
             };
+            o..on_click(Box::new(|| do_order() })
             o.construct({
                 let mut c = Vec::<View>::new();
                 c.push({
