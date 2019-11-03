@@ -13,7 +13,7 @@ enum NodeType {
     If(String),
     For(String), 
     Simple(String),
-    //Complex(Args),
+    Params(String),
 }
 
 /*
@@ -72,7 +72,8 @@ impl Node {
 
     fn parse_view_node_args(
         mut input: PeekableTokenStream,
-    ) -> Result<(Option<String>, PeekableTokenStream), String> {
+    ) -> Result<(Option<String>,bool, PeekableTokenStream), String> {
+        let mut is_structured = true;
         let mut has_args = false;
         if let Some(TokenTree::Group(t)) = input.peek() {
             if t.delimiter() == Delimiter::Parenthesis {
@@ -83,16 +84,37 @@ impl Node {
         let mut args = None;
         if has_args {
             if let Some(TokenTree::Group(t)) = input.next() {
+                {
+                    let mut s = t.stream().into_iter();
+                    {
+                        if let Some(TokenTree::Ident(_)) = s.next() {
+
+                        } else {
+                            is_structured = false;
+                        }
+                    }
+                    if is_structured {
+                        if let Some(TokenTree::Punct(p)) = s.next() {
+                            if p.as_char() != ':' {
+                                is_structured = false;
+                            }
+                        } else {
+                            is_structured = false;
+                        }
+                    }
+                }
                 args = Some(t.stream().to_string());
             }
+        } else {
+            is_structured = false;
         }
-        Ok((args, input))
+        Ok((args, is_structured, input))
     }
 
     fn parse_if_view(
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
-        let (args, i) = Node::parse_view_node_args(input)?;
+        let (args, _, i) = Node::parse_view_node_args(input)?;
         input = i;
         if args.is_none() {
             return Err("if requires arguments".to_string());
@@ -114,7 +136,7 @@ impl Node {
     fn parse_for_view(
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
-        let (args, i) = Node::parse_view_node_args(input)?;
+        let (args, _, i) = Node::parse_view_node_args(input)?;
         input = i;
         if args.is_none() {
             return Err("for requires arguments".to_string());
@@ -137,7 +159,7 @@ impl Node {
         name: String,
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
-         let (args, i) = Node::parse_view_node_args(input)?;
+        let (args, structed_args, i) = Node::parse_view_node_args(input)?;
         input = i;
         let (children, i) = Node::parse_view_node_children(input)?;
         input = i;
@@ -150,13 +172,23 @@ impl Node {
             };
             Ok((e, input))
         } else {
-            let e = Node {
-                name: name,
-                node_type: NodeType::Simple(args.unwrap()),
-                //modifiers: None,
-                children: children,
-            };
-            Ok((e, input))
+            if structed_args {
+                let e = Node {
+                    name: name,
+                    node_type: NodeType::Params(args.unwrap()),
+                    //modifiers: None,
+                    children: children,
+                };
+                Ok((e, input))
+            } else {
+                let e = Node {
+                    name: name,
+                    node_type: NodeType::Simple(args.unwrap()),
+                    //modifiers: None,
+                    children: children,
+                };
+                Ok((e, input))
+            }
         }
     }
 
@@ -244,6 +276,17 @@ impl Node {
                 )
                 .to_owned()
             },
+            NodeType::Params(args) => {
+                format!(
+                    r#"{{
+                        let mut o = {}{{ {},..Default::default()}};
+                        o.construct({});
+                        View::{}(o)
+                    }}"#,
+                    self.name, args, compiled_children, self.name
+                )
+                .to_owned()
+            },
             NodeType::Simple(args) => {
                 format!(
                     r#"{{
@@ -263,6 +306,7 @@ impl Node {
         match &self.node_type {
             NodeType::Empty => self.compile_user_node(),
             NodeType::Simple(_) => self.compile_user_node(),
+            NodeType::Params(_) => self.compile_user_node(),
             _ => panic!("cannot start with non-user view"),
         }
     }

@@ -22,6 +22,8 @@ pub enum View {
     Footer(Footer),
 }
 
+const BOLD:u8 = 0;
+
 #[test]
 fn basic_0() {
     let o = view! {
@@ -164,6 +166,19 @@ fn basic_simple() {
 }
 
 #[test]
+fn basic_complex() {
+    let o = view! {
+        Button(text:"order".to_string(),style:BOLD)
+    };
+    if let View::Button(b) = o {
+        assert_eq!("order", b.text);
+        assert_eq!(BOLD, b.style);
+    } else {
+        panic!("should be a button")
+    }
+}
+
+#[test]
 fn full() {
     let images = vec!["coffee.png","cream.png","sugar.png"];
     let show_legal = false;
@@ -184,9 +199,12 @@ fn full() {
     let _v = view!{
         VStack {
             Image("company.png")
+            Button(text:"order".to_string(),style:BOLD){ 
+                Image("order_icon.png") 
+            }
             For(i in images.iter()) { Image(i) }
             Footer
             If(show_legal) { Legal }
         }
-    }; 
+    };
 }
