@@ -11,9 +11,9 @@ type PeekableTokenStream = Peekable<proc_macro::token_stream::IntoIter>;
 enum NodeType {
     Empty,
     If(String),
-    For(String), //Simple(Vec<String>),
-                 //Complex(HashMap<String, String>),
-                 //Iterable
+    For(String), 
+    Simple(String),
+    //Complex(Args),
 }
 
 /*
@@ -77,9 +77,7 @@ impl Node {
         if let Some(TokenTree::Group(t)) = input.peek() {
             if t.delimiter() == Delimiter::Parenthesis {
                 has_args = true;
-            } else {
-                return Err("unexpected punctuation syntax of args start".to_owned());
-            }
+            } 
         }
 
         let mut args = None;
@@ -139,15 +137,27 @@ impl Node {
         name: String,
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
+         let (args, i) = Node::parse_view_node_args(input)?;
+        input = i;
         let (children, i) = Node::parse_view_node_children(input)?;
         input = i;
-        let e = Node {
-            name: name,
-            node_type: NodeType::Empty,
-            //modifiers: None,
-            children: children,
-        };
-        Ok((e, input))
+        if args.is_none() {
+            let e = Node {
+                name: name,
+                node_type: NodeType::Empty,
+                //modifiers: None,
+                children: children,
+            };
+            Ok((e, input))
+        } else {
+            let e = Node {
+                name: name,
+                node_type: NodeType::Simple(args.unwrap()),
+                //modifiers: None,
+                children: children,
+            };
+            Ok((e, input))
+        }
     }
 
     fn parse_view_node(
@@ -220,22 +230,39 @@ impl Node {
         "None".to_owned()
     }
 
-    fn compile_empty(&self) -> String {
-        let compiled_children = self.compile_children();
-        format!(
-            r#"{{
-                let mut o = {}{{..Default::default()}};
-                o.construct({});
-                View::{}(o)
-            }}"#,
-            self.name, compiled_children, self.name
-        )
-        .to_owned()
+    fn compile_user_node(&self) -> String {
+         let compiled_children = self.compile_children();
+        match &self.node_type {
+            NodeType::Empty => {
+                format!(
+                    r#"{{
+                        let mut o = {}{{..Default::default()}};
+                        o.construct({});
+                        View::{}(o)
+                    }}"#,
+                    self.name, compiled_children, self.name
+                )
+                .to_owned()
+            },
+            NodeType::Simple(args) => {
+                format!(
+                    r#"{{
+                        let mut o = {}::new({});
+                        o.construct({});
+                        View::{}(o)
+                    }}"#,
+                    self.name, args, compiled_children, self.name
+                )
+                .to_owned()
+            },
+            _ => panic!("cannot start with non-user view"),
+        }
     }
 
     fn compile(&self) -> String {
         match &self.node_type {
-            NodeType::Empty => self.compile_empty(),
+            NodeType::Empty => self.compile_user_node(),
+            NodeType::Simple(_) => self.compile_user_node(),
             _ => panic!("cannot start with non-user view"),
         }
     }

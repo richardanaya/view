@@ -151,6 +151,17 @@ fn basic_for() {
     }
 }
 
+#[test]
+fn basic_simple() {
+    let o = view! {
+        Image("hey")
+    };
+    if let View::Image(i) = o {
+        assert_eq!("hey", i.path);
+    } else {
+        panic!("should be a image")
+    }
+}
 
 #[test]
 fn full() {
@@ -172,8 +183,8 @@ fn full() {
 
     let _v = view!{
         VStack {
-            Image
-            For(i in images.iter()) { Image }
+            Image("company.png")
+            For(i in images.iter()) { Image(i) }
             Footer
             If(show_legal) { Legal }
         }
