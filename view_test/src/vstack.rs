@@ -1,6 +1,6 @@
 use crate::View;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct VStack {
     pub children: Vec<crate::View>,
 }

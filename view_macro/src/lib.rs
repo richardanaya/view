@@ -213,7 +213,7 @@ impl Node {
                 let e = Node {
                     name: name,
                     node_type: NodeType::Params(args.unwrap()),
-                    modifiers: None,
+                    modifiers: mods,
                     children: children,
                 };
                 Ok((e, input))

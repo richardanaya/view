@@ -1,6 +1,6 @@
 use crate::View;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Button {
     pub text: String,
     pub style: u8,

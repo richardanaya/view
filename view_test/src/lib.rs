@@ -10,6 +10,7 @@ use image::Image;
 use legal::Legal;
 use vstack::VStack;
 
+#[derive(Debug)]
 pub enum View {
     Button(Button),
     VStack(VStack),
@@ -208,6 +209,30 @@ mod tests {
     fn do_order() {}
 
     #[test]
+    fn basic_modification_3() {
+        let o = view! {
+            VStack {
+                Button(text:"order".to_string(),style:BOLD)
+                .on_click(Box::new(||do_order()))
+                .on_click(Box::new(||do_order())){
+                    Image("order_icon.png")
+                }
+            }
+        };
+
+        if let View::VStack(s) = o {
+            assert_eq!(1, s.children.len());
+            if let View::Button(b) = &s.children[0] {
+                assert_eq!(2, b.num_click_handlers);
+            } else {
+                panic!("should be a button")
+            }
+        } else {
+            panic!("should be a vstack")
+        }
+    }
+
+    #[test]
     fn full() {
         let images = vec!["coffee.png", "cream.png", "sugar.png"];
         let show_legal = false;
@@ -216,7 +241,8 @@ mod tests {
             VStack {
                 Image("company.png")
                 Button(text:"order".to_string(),style:BOLD)
-                .on_click(||{ do_order() }){
+                .on_click(Box::new(||do_order()))
+                .on_click(Box::new(||do_order())){
                     Image("order_icon.png")
                 }
                 For(i in images.iter()) { Image(i) }
@@ -224,8 +250,19 @@ mod tests {
                 If(show_legal) { Legal }
             }
         };
-        if let View::VStack(v) = o {
-            assert_eq!(6, v.children.len());
+
+        if let View::VStack(s) = o {
+            assert_eq!(6, s.children.len());
+            if let View::Image(i) = &s.children[0] {
+                assert_eq!("company.png", i.path);
+            } else {
+                panic!("should be a button")
+            }
+            if let View::Button(b) = &s.children[1] {
+                assert_eq!(2, b.num_click_handlers);
+            } else {
+                panic!("should be a button")
+            }
         } else {
             panic!("should be a vstack")
         }
