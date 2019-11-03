@@ -213,7 +213,7 @@ mod tests {
         let images = vec!["coffee.png", "cream.png", "sugar.png"];
         let show_legal = false;
 
-        let _v = view! {
+        let o = view! {
             VStack {
                 Image("company.png")
                 Button(text:"order".to_string(),style:BOLD)
@@ -225,5 +225,10 @@ mod tests {
                 If(show_legal) { Legal }
             }
         };
+        if let View::VStack(v) = o {
+            assert_eq!(6, v.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
     }
 }
