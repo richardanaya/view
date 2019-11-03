@@ -10,7 +10,7 @@ pub enum View {
     Button(Button),
     VStack(VStack),
 }
-
+/*
 #[test]
 fn basic_0() {
     let o = view! {
@@ -85,6 +85,39 @@ fn basic_4() {
         } else {
             panic!("should be a vstack")
         }
+    } else {
+        panic!("should be a vstack")
+    }
+}
+
+#[test]
+fn basic_if() {
+    let show_button = false;
+    let o = view! {
+        VStack {
+            If(show_button) {
+            }
+        }
+    };
+    if let View::VStack(v) = o {
+        assert_eq!(0, v.children.len());
+    } else {
+        panic!("should be a vstack")
+    }
+}*/
+
+#[test]
+fn basic_if_2() {
+    let show_button = true;
+    let o = view! {
+        VStack {
+            If(show_button) {
+                Button
+            }
+        }
+    };
+    if let View::VStack(v) = o {
+        assert_eq!(1, v.children.len());
     } else {
         panic!("should be a vstack")
     }

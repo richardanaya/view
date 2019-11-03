@@ -11,6 +11,7 @@ type PeekableTokenStream = Peekable<proc_macro::token_stream::IntoIter>;
 #[derive(Debug)]
 enum NodeType {
     Empty,
+    If(String),
     //Simple(Vec<String>),
     //Complex(HashMap<String, String>),
     //Iterable,
@@ -70,6 +71,65 @@ impl Node {
         Ok((node_children, input))
     }
 
+    fn parse_view_node_args(
+        mut input: PeekableTokenStream,
+    ) -> Result<(Option<String>, PeekableTokenStream), String> {
+        let mut has_args = false;
+        if let Some(TokenTree::Group(t)) = input.peek() {
+            if t.delimiter() == Delimiter::Parenthesis {
+                has_args = true;
+            } else {
+                return Err("unexpected punctuation syntax of args start".to_owned());
+            }
+        }
+
+        let mut args = None;
+        if has_args {
+            let mut arg_input: Option<PeekableTokenStream> = None;
+            if let Some(TokenTree::Group(t)) = input.next() {
+                args = Some(t.stream().to_string());
+            }
+        }
+        Ok((args, input))
+    }
+
+    fn parse_if_view(
+        mut input: PeekableTokenStream,
+    ) -> Result<(Node, PeekableTokenStream), String> {
+        let (args, i) = Node::parse_view_node_args(input)?;
+        input = i;
+        if args.is_none() {
+            return Err("if requires arguments".to_string());
+        }
+        let (children, i) = Node::parse_view_node_children(input)?;
+        input = i;
+        if children.is_none() {
+            return Err("if requires children".to_string());
+        }
+        let e = Node {
+            name: "If".to_string(),
+            node_type: NodeType::If(args.unwrap()),
+            //modifiers: None,
+            children: children,
+        };
+        Ok((e, input))
+    }
+
+    fn parse_user_view(
+        name: String,
+        mut input: PeekableTokenStream,
+    ) -> Result<(Node, PeekableTokenStream), String> {
+        let (children, i) = Node::parse_view_node_children(input)?;
+        input = i;
+        let e = Node {
+            name: name,
+            node_type: NodeType::Empty,
+            //modifiers: None,
+            children: children,
+        };
+        Ok((e, input))
+    }
+
     fn parse_view_node(
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
@@ -77,17 +137,12 @@ impl Node {
         if let Some(TokenTree::Ident(name)) = input.next() {
             node_name = Some(name.to_string());
         }
-
         if let Some(name) = node_name {
-            let (children, i) = Node::parse_view_node_children(input).unwrap();
-            input = i;
-            let e = Node {
-                name: name,
-                node_type: NodeType::Empty,
-                //modifiers: None,
-                children: children,
-            };
-            return Ok((e, input));
+            if name == "If" {
+                Node::parse_if_view(input)
+            } else {
+                Node::parse_user_view(name, input)
+            }
         } else {
             Err("unexpected start of view node".to_owned())
         }
@@ -105,7 +160,14 @@ impl Node {
             }
             let compiled_children = c
                 .iter()
-                .map(|x| format!("c.push({});\n", x.compile()).to_owned())
+                .map(|x| match &x.node_type {
+                    NodeType::If(args) => {
+                        format!(r#"if {} {{ 
+                            println!("hey");
+                        }}"#,args).to_string()
+                    },
+                    _ => format!("c.push({});\n", x.compile()).to_owned(),
+                })
                 .collect::<Vec<String>>()
                 .join("\n");
             return format!(
@@ -133,11 +195,14 @@ impl Node {
         )
         .to_owned()
     }
+    fn compile_if(&self) -> String {
+        format!(r#""#).to_owned()
+    }
 
     fn compile(&self) -> String {
         match &self.node_type {
-            _ => self.compile_empty(),
-            // _ => panic!("cannot handle"),
+            NodeType::Empty => self.compile_empty(),
+            _ => panic!("cannot start with non-user view"),
         }
     }
 }
@@ -147,5 +212,6 @@ pub fn view(input: TokenStream) -> TokenStream {
     let tokens = input.into_iter().peekable();
     let e = Node::from(tokens).expect("invalid syntax");
     let s = e.compile();
+    println!("{}",s);
     TokenStream::from_str(&s).unwrap()
 }
