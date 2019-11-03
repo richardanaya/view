@@ -26,7 +26,7 @@ let v = view!{
 ```
 
 <p align="center">
-<img src="ui.png" height="200px" align=center>
+<img src="ui.png" float=right>
 </p>
 
 Below is all the code this macro saves you from writing yourself.
