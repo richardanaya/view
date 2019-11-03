@@ -1,18 +1,15 @@
 #![feature(proc_macro_hygiene)]
-use view::*;
-
 mod button;
-mod vstack;
-mod image;
 mod footer;
+mod image;
 mod legal;
+mod vstack;
 
 use button::Button;
-use vstack::VStack;
+use footer::Footer;
 use image::Image;
 use legal::Legal;
-use footer::Footer;
-
+use vstack::VStack;
 
 pub enum View {
     Button(Button),
@@ -22,189 +19,208 @@ pub enum View {
     Footer(Footer),
 }
 
-const BOLD:u8 = 0;
+#[cfg(test)]
+mod tests {
+    use crate::*;
+    use view::*;
 
-#[test]
-fn basic_0() {
-    let o = view! {
-        Button
-    };
-    if let View::Button(_) = o {
-    } else {
-        panic!("should be a button")
-    }
-}
+    const BOLD: u8 = 0;
 
-#[test]
-fn basic_1() {
-    let o = view! {
-        VStack
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(0, v.children.len());
-    } else {
-        panic!("should be a vstack")
-    }
-}
-
-#[test]
-fn basic_2() {
-    let o = view! {
-        VStack {
+    #[test]
+    fn basic_0() {
+        let o = view! {
             Button
+        };
+        if let View::Button(_) = o {
+        } else {
+            panic!("should be a button")
         }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(1, v.children.len());
-    } else {
-        panic!("should be a vstack")
     }
-}
 
-#[test]
-fn basic_3() {
-    let o = view! {
-        VStack {
-            Button
-            Button
+    #[test]
+    fn basic_1() {
+        let o = view! {
+            VStack
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(0, v.children.len());
+        } else {
+            panic!("should be a vstack")
         }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(2, v.children.len());
-    } else {
-        panic!("should be a vstack")
     }
-}
 
-#[test]
-fn basic_4() {
-    let o = view! {
-        VStack {
-            Button
+    #[test]
+    fn basic_2() {
+        let o = view! {
+            VStack {
+                Button
+            }
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(1, v.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
+    }
+
+    #[test]
+    fn basic_3() {
+        let o = view! {
             VStack {
                 Button
                 Button
             }
-        }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(2, v.children.len());
-        if let View::Button(_) = &v.children[0] {
-        } else {
-            panic!("should be a button")
-        }
-        if let View::VStack(v2) = &v.children[1] {
-            assert_eq!(2, v2.children.len());
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(2, v.children.len());
         } else {
             panic!("should be a vstack")
         }
-    } else {
-        panic!("should be a vstack")
     }
-}
 
-#[test]
-fn basic_if() {
-    let show_button = false;
-    let o = view! {
-        VStack {
-            If(show_button) {
-            }
-        }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(0, v.children.len());
-    } else {
-        panic!("should be a vstack")
-    }
-}
-
-#[test]
-fn basic_if_2() {
-    let show_button = true;
-    let o = view! {
-        VStack {
-            If(show_button) {
+    #[test]
+    fn basic_4() {
+        let o = view! {
+            VStack {
                 Button
+                VStack {
+                    Button
+                    Button
+                }
             }
-        }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(1, v.children.len());
-    } else {
-        panic!("should be a vstack")
-    }
-}
-
-#[test]
-fn basic_for() {
-    let show_button = true;
-    let o = view! {
-        VStack {
-            For(i in 0..10) {
-                Button
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(2, v.children.len());
+            if let View::Button(_) = &v.children[0] {
+            } else {
+                panic!("should be a button")
             }
+            if let View::VStack(v2) = &v.children[1] {
+                assert_eq!(2, v2.children.len());
+            } else {
+                panic!("should be a vstack")
+            }
+        } else {
+            panic!("should be a vstack")
         }
-    };
-    if let View::VStack(v) = o {
-        assert_eq!(10, v.children.len());
-    } else {
-        panic!("should be a vstack")
     }
-}
 
-#[test]
-fn basic_simple() {
-    let o = view! {
-        Image("hey")
-    };
-    if let View::Image(i) = o {
-        assert_eq!("hey", i.path);
-    } else {
-        panic!("should be a image")
+    #[test]
+    fn basic_if() {
+        let show_button = false;
+        let o = view! {
+            VStack {
+                If(show_button) {
+                }
+            }
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(0, v.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
     }
-}
 
-#[test]
-fn basic_complex() {
-    let o = view! {
-        Button(text:"order".to_string(),style:BOLD)
-    };
-    if let View::Button(b) = o {
-        assert_eq!("order", b.text);
-        assert_eq!(BOLD, b.style);
-    } else {
-        panic!("should be a button")
+    #[test]
+    fn basic_if_2() {
+        let show_button = true;
+        let o = view! {
+            VStack {
+                If(show_button) {
+                    Button
+                }
+            }
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(1, v.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
     }
-}
 
-#[test]
-fn full() {
-    let images = vec!["coffee.png","cream.png","sugar.png"];
-    let show_legal = false;
-    /*let v = view!{
-        VStack {
-            Image("company.png") 
+    #[test]
+    fn basic_for() {
+        let o = view! {
+            VStack {
+                For(i in 0..10) {
+                    Button
+                }
+            }
+        };
+        if let View::VStack(v) = o {
+            assert_eq!(10, v.children.len());
+        } else {
+            panic!("should be a vstack")
+        }
+    }
+
+    #[test]
+    fn basic_simple() {
+        let o = view! {
+            Image("hey")
+        };
+        if let View::Image(i) = o {
+            assert_eq!("hey", i.path);
+        } else {
+            panic!("should be a image")
+        }
+    }
+
+    #[test]
+    fn basic_complex() {
+        let o = view! {
             Button(text:"order".to_string(),style:BOLD)
-            .on_click(|x|{ do_order() }) { 
-                Image("order_icon.png") 
-            }
-            For(i in images.iter()) { Image(i) }
-            Footer
-            If(show_legal) { Legal }
+        };
+        if let View::Button(b) = o {
+            assert_eq!("order", b.text);
+            assert_eq!(BOLD, b.style);
+        } else {
+            panic!("should be a button")
         }
-    }; */ 
-             
+    }
 
-    let _v = view!{
-        VStack {
-            Image("company.png")
-            Button(text:"order".to_string(),style:BOLD){ 
-                Image("order_icon.png") 
-            }
-            For(i in images.iter()) { Image(i) }
-            Footer
-            If(show_legal) { Legal }
+    #[test]
+    fn basic_modification() {
+        let o = view! {
+            Button
+                .on_click(Box::new(|x|do_order()))
+        };
+        if let View::Button(b) = o {
+            assert_eq!(true, b.has_click_handler);
+        } else {
+            panic!("should be a button")
         }
-    };
+    }
+
+    fn do_order() {}
+
+    #[test]
+    fn full() {
+        let images = vec!["coffee.png", "cream.png", "sugar.png"];
+        let show_legal = false;
+        /*let v = view!{
+            VStack {
+                Image("company.png")
+                Button(text:"order".to_string(),style:BOLD)
+                .on_click(|x|{ do_order() }) {
+                    Image("order_icon.png")
+                }
+                For(i in images.iter()) { Image(i) }
+                Footer
+                If(show_legal) { Legal }
+            }
+        }; */
+
+        let _v = view! {
+            VStack {
+                Image("company.png")
+                Button(text:"order".to_string(),style:BOLD){
+                    Image("order_icon.png")
+                }
+                For(i in images.iter()) { Image(i) }
+                Footer
+                If(show_legal) { Legal }
+            }
+        };
+    }
 }
