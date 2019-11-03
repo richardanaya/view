@@ -32,54 +32,77 @@ let v = view!{
 Below is all the code this macro saves you from writing yourself.
 
 ```rust
-let images = vec!["coffee.png","cream.png","sugar.png"];
+let images = vec!["coffee.png", "cream.png", "sugar.png"];
 let show_legal = false;
 
-let v = { 
-  let o = VStack { ..Default::default() }
-  o.construct(Some({
-    let mut children = vec![];
-    children.push({
-      let o = Image::new("company.png");
-      o.construct(None)
-      View::Image(o)
-    });
-    children.push({
-      let o = Button { text: "a".to_owned(), style: BOLD, ..Default::default() };
-      o.on_click(|x|{ do_order() });
-      o.construct(Some({
-        let mut children = vec![];
-        children.push({
-          let o = Image::new("order_icon.png");
-          o.construct(None)
-          View::Image(o)
+let v = {
+    let mut o = VStack {
+        ..Default::default()
+    };
+    o.construct({
+        let mut c = Vec::<View>::new();
+        c.push({
+            let mut o = Image::new("company.png");
+            o.construct(None);
+            View::Image(o)
         });
-        children
-      }));
-      View::Button(o)
+        c.push({
+            let mut o = Button {
+                text: "order".to_string(),
+                style: BOLD,
+                ..Default::default()
+            };
+            o.construct({
+                let mut c = Vec::<View>::new();
+                c.push({
+                    let mut o = Image::new("order_icon.png");
+                    o.construct(None);
+                    View::Image(o)
+                });
+                Some(c)
+            });
+            View::Button(o)
+        });
+        for i in images.iter() {
+            c.append(
+                &mut ({
+                    let mut c = Vec::<View>::new();
+                    c.push({
+                        let mut o = Image::new(i);
+                        o.construct(None);
+                        View::Image(o)
+                    });
+                    Some(c)
+                })
+                .unwrap(),
+            );
+        }
+        c.push({
+            let mut o = Footer {
+                ..Default::default()
+            };
+            o.construct(None);
+            View::Footer(o)
+        });
+        if show_legal {
+            c.append(
+                &mut ({
+                    let mut c = Vec::<View>::new();
+                    c.push({
+                        let mut o = Legal {
+                            ..Default::default()
+                        };
+                        o.construct(None);
+                        View::Legal(o)
+                    });
+                    Some(c)
+                })
+                .unwrap(),
+            )
+        }
+        Some(c)
     });
-    for i in images.iter() {
-      children.push({
-        let o = Image::new(i);
-        o.construct(None)
-        View::Image(o)
-      });
-    }
-    children.push({
-      let o = Footer{ ..Default::default() };
-      o.construct(None)
-      View::Footer(o)
-    });
-    if show_legal {
-      children.push({
-        let o = Legal{ ..Default::default() };
-        o.construct(None)
-        View::Legal(o)
-      });
-    }
-    Some(children)
-  }));
-  View::VStack(o)
+    View::VStack(o)
 };
 ```
 
