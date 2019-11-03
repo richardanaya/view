@@ -16,18 +16,17 @@ enum NodeType {
     Params(String),
 }
 
-/*
 #[derive(Debug)]
 struct NodeModifier {
     function: String,
     parameters: String,
-}*/
+}
 
 #[derive(Debug)]
 struct Node {
     name: String,
     node_type: NodeType,
-    //modifiers: Option<Vec<NodeModifier>>,
+    modifiers: Option<Vec<NodeModifier>>,
     children: Option<Vec<Node>>,
 }
 
@@ -110,6 +109,43 @@ impl Node {
         Ok((args, is_structured, input))
     }
 
+    fn parse_view_node_mods(
+        mut input: PeekableTokenStream,
+    ) -> Result<(Option<Vec<NodeModifier>>, PeekableTokenStream), String> {
+        let mut mods = vec![];
+        loop {
+            if let Some(TokenTree::Punct(p)) = input.peek() {
+                if p.as_char() != '.' {
+                    break;
+                }
+            } else {
+                break;
+            }
+            input.next();
+            let mut name = None;
+            if let Some(TokenTree::Ident(i)) = input.next() {
+                name = Some(i.to_string());
+            }
+            if let Some(function_name) = name {
+                if let Some(TokenTree::Group(g)) = input.next() {
+                    if g.delimiter() == Delimiter::Parenthesis {
+                        mods.push(NodeModifier {
+                            function: function_name,
+                            parameters: g.stream().to_string(),
+                        })
+                    }
+                }
+            } else {
+                return Err("unexpected function name after .".to_owned());
+            }
+        }
+        if mods.len() == 0 {
+            Ok((None, input))
+        } else {
+            Ok((Some(mods), input))
+        }
+    }
+
     fn parse_if_view(
         mut input: PeekableTokenStream,
     ) -> Result<(Node, PeekableTokenStream), String> {
@@ -126,7 +162,7 @@ impl Node {
         let e = Node {
             name: "If".to_string(),
             node_type: NodeType::If(args.unwrap()),
-            //modifiers: None,
+            modifiers: None,
             children: children,
         };
         Ok((e, input))
@@ -148,7 +184,7 @@ impl Node {
         let e = Node {
             name: "For".to_string(),
             node_type: NodeType::For(args.unwrap()),
-            //modifiers: None,
+            modifiers: None,
             children: children,
         };
         Ok((e, input))
@@ -160,13 +196,15 @@ impl Node {
     ) -> Result<(Node, PeekableTokenStream), String> {
         let (args, structed_args, i) = Node::parse_view_node_args(input)?;
         input = i;
+        let (mods, i) = Node::parse_view_node_mods(input)?;
+        input = i;
         let (children, i) = Node::parse_view_node_children(input)?;
         input = i;
         if args.is_none() {
             let e = Node {
                 name: name,
                 node_type: NodeType::Empty,
-                //modifiers: None,
+                modifiers: mods,
                 children: children,
             };
             Ok((e, input))
@@ -175,7 +213,7 @@ impl Node {
                 let e = Node {
                     name: name,
                     node_type: NodeType::Params(args.unwrap()),
-                    //modifiers: None,
+                    modifiers: None,
                     children: children,
                 };
                 Ok((e, input))
@@ -183,7 +221,7 @@ impl Node {
                 let e = Node {
                     name: name,
                     node_type: NodeType::Simple(args.unwrap()),
-                    //modifiers: None,
+                    modifiers: mods,
                     children: children,
                 };
                 Ok((e, input))
@@ -214,6 +252,21 @@ impl Node {
     fn from(input: PeekableTokenStream) -> Result<Node, String> {
         let (n, _) = Node::parse_view_node(input)?;
         Ok(n)
+    }
+
+    fn compile_mods(&self) -> String {
+        if let Some(m) = &self.modifiers {
+            if m.len() == 0 {
+                "".to_owned()
+            } else {
+                m.iter()
+                    .map(|x| format!(r#"o.{}({});"#, x.function, x.parameters).to_string())
+                    .collect::<Vec<String>>()
+                    .join("\n")
+            }
+        } else {
+            "".to_owned()
+        }
     }
 
     fn compile_children(&self) -> String {
@@ -262,33 +315,37 @@ impl Node {
     }
 
     fn compile_user_node(&self) -> String {
+        let mods = self.compile_mods();
         let compiled_children = self.compile_children();
         match &self.node_type {
             NodeType::Empty => format!(
                 r#"{{
                         let mut o = {}{{..Default::default()}};
+                        {}
                         o.construct({});
                         View::{}(o)
                     }}"#,
-                self.name, compiled_children, self.name
+                self.name, mods, compiled_children, self.name
             )
             .to_owned(),
             NodeType::Params(args) => format!(
                 r#"{{
                         let mut o = {}{{ {},..Default::default()}};
+                        {}
                         o.construct({});
                         View::{}(o)
                     }}"#,
-                self.name, args, compiled_children, self.name
+                self.name, args, mods, compiled_children, self.name
             )
             .to_owned(),
             NodeType::Simple(args) => format!(
                 r#"{{
                         let mut o = {}::new({});
+                        {}
                         o.construct({});
                         View::{}(o)
                     }}"#,
-                self.name, args, compiled_children, self.name
+                self.name, args, mods, compiled_children, self.name
             )
             .to_owned(),
             _ => panic!("cannot start with non-user view"),

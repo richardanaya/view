@@ -183,10 +183,24 @@ mod tests {
     fn basic_modification() {
         let o = view! {
             Button
-                .on_click(Box::new(|x|do_order()))
+                .on_click(Box::new(||do_order()))
         };
         if let View::Button(b) = o {
-            assert_eq!(true, b.has_click_handler);
+            assert_eq!(1, b.num_click_handlers);
+        } else {
+            panic!("should be a button")
+        }
+    }
+
+    #[test]
+    fn basic_modification_2() {
+        let o = view! {
+            Button
+                .on_click(Box::new(||do_order()))
+                .on_click(Box::new(||do_order()))
+        };
+        if let View::Button(b) = o {
+            assert_eq!(2, b.num_click_handlers);
         } else {
             panic!("should be a button")
         }
@@ -198,23 +212,12 @@ mod tests {
     fn full() {
         let images = vec!["coffee.png", "cream.png", "sugar.png"];
         let show_legal = false;
-        /*let v = view!{
-            VStack {
-                Image("company.png")
-                Button(text:"order".to_string(),style:BOLD)
-                .on_click(|x|{ do_order() }) {
-                    Image("order_icon.png")
-                }
-                For(i in images.iter()) { Image(i) }
-                Footer
-                If(show_legal) { Legal }
-            }
-        }; */
 
         let _v = view! {
             VStack {
                 Image("company.png")
-                Button(text:"order".to_string(),style:BOLD){
+                Button(text:"order".to_string(),style:BOLD)
+                .on_click(||{ do_order() }){
                     Image("order_icon.png")
                 }
                 For(i in images.iter()) { Image(i) }

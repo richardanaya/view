@@ -4,12 +4,12 @@ use crate::View;
 pub struct Button {
     pub text: String,
     pub style: u8,
-    pub has_click_handler: bool,
+    pub num_click_handlers: usize,
 }
 
 impl Button {
     pub fn construct(&self, _children: Option<Vec<View>>) {}
     pub fn on_click(&mut self, _f: Box<dyn Fn() -> ()>) {
-        self.has_click_handler = true;
+        self.num_click_handlers += 1;
     }
 }
