@@ -1,4 +1,3 @@
-#![feature(proc_macro_hygiene)]
 mod button;
 mod footer;
 mod image;

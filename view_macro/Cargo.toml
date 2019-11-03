@@ -1,5 +1,5 @@
 [package]
-name = "view"
+name = "view_macro"
 version = "0.1.1"
 authors = ["Richard Anaya"]
 edition = "2018"
@@ -8,5 +8,7 @@ description = "a macro for constructing views"
 repository = "https://github.com/richardanaya/view/"
 
 [dependencies]
-view_macro = "0.1.1"
 proc-macro-hack = "0.5"
+
+[lib]
+proc-macro = true
