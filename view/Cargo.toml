@@ -1,12 +1,11 @@
 [package]
 name = "view"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Richard Anaya"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
 description = "a macro for constructing views"
 repository = "https://github.com/richardanaya/view/"
 
-[dependencies]
-proc-macro-hack = "0.5"
-view_macro = {path="../view_macro"}
+[lib]
+proc-macro = true

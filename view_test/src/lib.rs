@@ -1,3 +1,4 @@
+#![feature(proc_macro_hygiene)]
 use view::*;
 
 mod button;
@@ -10,7 +11,7 @@ pub enum View {
     Button(Button),
     VStack(VStack),
 }
-/*
+
 #[test]
 fn basic_0() {
     let o = view! {
@@ -104,9 +105,8 @@ fn basic_if() {
     } else {
         panic!("should be a vstack")
     }
-}*/
+}
 
-#[test]
 fn basic_if_2() {
     let show_button = true;
     let o = view! {
