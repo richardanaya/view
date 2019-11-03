@@ -10,7 +10,7 @@ This example shows everything that's possible
 
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
-let show_legal = false;
+let show_coupon = false;
 ​
 let v = view!{
   VStack {
@@ -20,8 +20,8 @@ let v = view!{
         Image("order_icon.png") 
       }
     For(i in images.iter()) { Image(i) }
-    Footer
-    If(show_legal) { Legal }
+    If(show_coupon) { Coupon }
+    Legal
   }
 };
 ```
@@ -75,29 +75,29 @@ let v = {
                 .unwrap(),
             );
         }
-        c.push({
-            let mut o = Footer {
-                ..Default::default()
-            };
-            o.construct(None);
-            View::Footer(o)
-        });
-        if show_legal {
+        if show_coupon {
             c.append(
                 &mut ({
                     let mut c = Vec::<View>::new();
                     c.push({
-                        let mut o = Legal {
+                        let mut o = Coupon {
                             ..Default::default()
                         };
                         o.construct(None);
-                        View::Legal(o)
+                        View::Coupon(o)
                     });
                     Some(c)
                 })
                 .unwrap(),
             )
         }
+        c.push({
+            let mut o = Legal {
+                ..Default::default()
+            };
+            o.construct(None);
+            View::Legal(o)
+        });
         Some(c)
     });
     View::VStack(o)
