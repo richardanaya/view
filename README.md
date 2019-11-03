@@ -7,7 +7,6 @@ view = "0.1"
 Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views in a non framework specific manner. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some ideas from SwiftUI.
 
 This example shows everything that's possible
-
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let show_coupon = false;
@@ -25,6 +24,10 @@ let v = view!{
   }
 };
 ```
+
+<p align="center">
+<img src="ui.png" height="200px" align=center>
+</p>
 
 Below is all the code this macro saves you from writing yourself.
 
