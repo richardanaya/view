@@ -3,13 +3,23 @@ use view::*;
 
 mod button;
 mod vstack;
+mod image;
+mod footer;
+mod legal;
 
 use button::Button;
 use vstack::VStack;
+use image::Image;
+use legal::Legal;
+use footer::Footer;
+
 
 pub enum View {
     Button(Button),
     VStack(VStack),
+    Image(Image),
+    Legal(Legal),
+    Footer(Footer),
 }
 
 #[test]
@@ -107,6 +117,7 @@ fn basic_if() {
     }
 }
 
+#[test]
 fn basic_if_2() {
     let show_button = true;
     let o = view! {
@@ -121,4 +132,50 @@ fn basic_if_2() {
     } else {
         panic!("should be a vstack")
     }
+}
+
+#[test]
+fn basic_for() {
+    let show_button = true;
+    let o = view! {
+        VStack {
+            For(i in 0..10) {
+                Button
+            }
+        }
+    };
+    if let View::VStack(v) = o {
+        assert_eq!(10, v.children.len());
+    } else {
+        panic!("should be a vstack")
+    }
+}
+
+
+#[test]
+fn full() {
+    let images = vec!["coffee.png","cream.png","sugar.png"];
+    let show_legal = false;
+    /*let v = view!{
+        VStack {
+            Image("company.png") 
+            Button(text:"order".to_string(),style:BOLD)
+            .on_click(|x|{ do_order() }) { 
+                Image("order_icon.png") 
+            }
+            For(i in images.iter()) { Image(i) }
+            Footer
+            If(show_legal) { Legal }
+        }
+    }; */ 
+             
+
+    let _v = view!{
+        VStack {
+            Image
+            For(i in images.iter()) { Image }
+            Footer
+            If(show_legal) { Legal }
+        }
+    }; 
 }

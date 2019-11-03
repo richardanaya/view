@@ -11,9 +11,9 @@ type PeekableTokenStream = Peekable<proc_macro::token_stream::IntoIter>;
 enum NodeType {
     Empty,
     If(String),
-    //Simple(Vec<String>),
-    //Complex(HashMap<String, String>),
-    //Iterable,
+    For(String), //Simple(Vec<String>),
+                 //Complex(HashMap<String, String>),
+                 //Iterable
 }
 
 /*
@@ -113,6 +113,28 @@ impl Node {
         Ok((e, input))
     }
 
+    fn parse_for_view(
+        mut input: PeekableTokenStream,
+    ) -> Result<(Node, PeekableTokenStream), String> {
+        let (args, i) = Node::parse_view_node_args(input)?;
+        input = i;
+        if args.is_none() {
+            return Err("for requires arguments".to_string());
+        }
+        let (children, i) = Node::parse_view_node_children(input)?;
+        input = i;
+        if children.is_none() {
+            return Err("for requires children".to_string());
+        }
+        let e = Node {
+            name: "For".to_string(),
+            node_type: NodeType::For(args.unwrap()),
+            //modifiers: None,
+            children: children,
+        };
+        Ok((e, input))
+    }
+
     fn parse_user_view(
         name: String,
         mut input: PeekableTokenStream,
@@ -138,6 +160,8 @@ impl Node {
         if let Some(name) = node_name {
             if name == "If" {
                 Node::parse_if_view(input)
+            } else if name == "For" {
+                Node::parse_for_view(input)
             } else {
                 Node::parse_user_view(name, input)
             }
@@ -161,10 +185,24 @@ impl Node {
                 .map(|x| match &x.node_type {
                     NodeType::If(args) => {
                         let if_children = x.compile_children();
-                        format!(r#"if {} {{ 
+                        format!(
+                            r#"if {} {{ 
                             c.append(&mut ({}).unwrap())
-                        }}"#,args,if_children).to_string()
-                    },
+                        }}"#,
+                            args, if_children
+                        )
+                        .to_string()
+                    }
+                    NodeType::For(args) => {
+                        let if_children = x.compile_children();
+                        format!(
+                            r#"for {} {{ 
+                            c.append(&mut ({}).unwrap());
+                        }}"#,
+                            args, if_children
+                        )
+                        .to_string()
+                    }
                     _ => format!("c.push({});\n", x.compile()).to_owned(),
                 })
                 .collect::<Vec<String>>()
