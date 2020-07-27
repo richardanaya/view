@@ -52,7 +52,7 @@ impl Node {
             if let Some(mut child_input) = child_input {
                 let mut children = vec![];
                 loop {
-                    if let None = child_input.peek() {
+                    if child_input.peek().is_none() {
                         break;
                     } else {
                         let (n, i) = Node::parse_view_node(child_input)?;
@@ -138,7 +138,7 @@ impl Node {
                 return Err("unexpected function name after .".to_owned());
             }
         }
-        if mods.len() == 0 {
+        if mods.is_empty() {
             Ok((None, input))
         } else {
             Ok((Some(mods), input))
@@ -162,7 +162,7 @@ impl Node {
             name: "If".to_string(),
             node_type: NodeType::If(args.unwrap()),
             modifiers: None,
-            children: children,
+            children,
         };
         Ok((e, input))
     }
@@ -184,7 +184,7 @@ impl Node {
             name: "For".to_string(),
             node_type: NodeType::For(args.unwrap()),
             modifiers: None,
-            children: children,
+            children,
         };
         Ok((e, input))
     }
@@ -199,32 +199,32 @@ impl Node {
         input = i;
         let (children, i) = Node::parse_view_node_children(input)?;
         input = i;
-        if args.is_none() {
-            let e = Node {
-                name: name,
-                node_type: NodeType::Empty,
-                modifiers: mods,
-                children: children,
-            };
-            Ok((e, input))
-        } else {
+        if let Some(a) = args {
             if structed_args {
                 let e = Node {
-                    name: name,
-                    node_type: NodeType::Params(args.unwrap()),
+                    name,
+                    node_type: NodeType::Params(a),
                     modifiers: mods,
-                    children: children,
+                    children,
                 };
                 Ok((e, input))
             } else {
                 let e = Node {
-                    name: name,
-                    node_type: NodeType::Simple(args.unwrap()),
+                    name,
+                    node_type: NodeType::Simple(a),
                     modifiers: mods,
-                    children: children,
+                    children,
                 };
                 Ok((e, input))
             }
+        } else {
+            let e = Node {
+                name,
+                node_type: NodeType::Empty,
+                modifiers: mods,
+                children,
+            };
+            Ok((e, input))
         }
     }
 
@@ -255,11 +255,11 @@ impl Node {
 
     fn compile_mods(&self) -> String {
         if let Some(m) = &self.modifiers {
-            if m.len() == 0 {
+            if m.is_empty() {
                 "".to_owned()
             } else {
                 m.iter()
-                    .map(|x| format!(r#"o.{}({});"#, x.function, x.parameters).to_string())
+                    .map(|x| format!(r#"o.{}({});"#, x.function, x.parameters))
                     .collect::<Vec<String>>()
                     .join("\n")
             }
@@ -270,84 +270,134 @@ impl Node {
 
     fn compile_children(&self) -> String {
         if let Some(c) = &self.children {
-            if c.len() == 0 {
-                return "None".to_owned();
+            if c.is_empty() {
+                return "".to_owned();
             }
             let compiled_children = c
                 .iter()
                 .map(|x| match &x.node_type {
                     NodeType::If(args) => {
                         let if_children = x.compile_children();
-                        format!(
-                            r#"if {} {{ 
-                            c.append(&mut ({}).unwrap())
-                        }}"#,
-                            args, if_children
-                        )
-                        .to_string()
+                        if if_children != "" {
+                            format!(
+                                r#"if {} {{ 
+                                c.append(&mut {})
+                            }}"#,
+                                args, if_children
+                            )
+                        } else {
+                            "".to_string()
+                        }
                     }
                     NodeType::For(args) => {
                         let if_children = x.compile_children();
                         format!(
                             r#"for {} {{ 
-                            c.append(&mut ({}).unwrap());
+                            c.append(&mut {});
                         }}"#,
                             args, if_children
                         )
-                        .to_string()
                     }
-                    _ => format!("c.push({});\n", x.compile()).to_owned(),
+                    _ => format!("c.push(Box::new({}));\n", x.compile()),
                 })
                 .collect::<Vec<String>>()
                 .join("\n");
             return format!(
                 r#"{{
-                    let mut c = Vec::<View>::new();
+                    let mut c = Vec::<Box<View>>::new();
                     {}
-                    Some(c)
+                    c
                 }}"#,
                 compiled_children
-            )
-            .to_owned();
+            );
         }
-        "None".to_owned()
+        "".to_owned()
     }
 
     fn compile_user_node(&self) -> String {
         let mods = self.compile_mods();
         let compiled_children = self.compile_children();
-        match &self.node_type {
-            NodeType::Empty => format!(
-                r#"{{
-                        let mut o = {}{{..Default::default()}};
-                        {}
-                        o.construct({});
-                        View::{}(o)
-                    }}"#,
-                self.name, mods, compiled_children, self.name
-            )
-            .to_owned(),
-            NodeType::Params(args) => format!(
-                r#"{{
-                        let mut o = {}{{ {},..Default::default()}};
-                        {}
-                        o.construct({});
-                        View::{}(o)
-                    }}"#,
-                self.name, args, mods, compiled_children, self.name
-            )
-            .to_owned(),
-            NodeType::Simple(args) => format!(
-                r#"{{
-                        let mut o = {}::new({});
-                        {}
-                        o.construct({});
-                        View::{}(o)
-                    }}"#,
-                self.name, args, mods, compiled_children, self.name
-            )
-            .to_owned(),
-            _ => panic!("cannot start with non-user view"),
+        if compiled_children != "" {
+            match &self.node_type {
+                NodeType::Empty => format!(
+                    r#"{{
+                            let mut o = {}{{..Default::default()}};
+                            {}
+                            o.construct({});
+                            o
+                        }}"#,
+                    self.name, mods, compiled_children
+                ),
+                NodeType::Params(args) => format!(
+                    r#"{{
+                            let mut o = {}{{ {},..Default::default()}};
+                            {}
+                            o.construct({});
+                            o
+                        }}"#,
+                    self.name, args, mods, compiled_children
+                ),
+                NodeType::Simple(args) => format!(
+                    r#"{{
+                            let mut o = {}::new({});
+                            {}
+                            o.construct({});
+                            o
+                        }}"#,
+                    self.name, args, mods, compiled_children
+                ),
+                _ => panic!("cannot start with non-user view"),
+            }
+        } else if mods != "" {
+            match &self.node_type {
+                NodeType::Empty => format!(
+                    r#"{{
+                            let mut o = {}{{..Default::default()}};
+                            {}
+                            o
+                        }}"#,
+                    self.name, mods,
+                ),
+                NodeType::Params(args) => format!(
+                    r#"{{
+                            let mut o = {}{{ {},..Default::default()}};
+                            {}
+                            o
+                        }}"#,
+                    self.name, args, mods,
+                ),
+                NodeType::Simple(args) => format!(
+                    r#"{{
+                            let mut o = {}::new({});
+                            {}
+                            o
+                        }}"#,
+                    self.name, args, mods,
+                ),
+                _ => panic!("cannot start with non-user view"),
+            }
+        } else {
+            match &self.node_type {
+                NodeType::Empty => format!(
+                    r#"{{
+                                {}{{..Default::default()}}
+                            }}"#,
+                    self.name,
+                ),
+                NodeType::Params(args) => format!(
+                    r#"{{
+                                {}{{ {},..Default::default()}}
+                            }}"#,
+                    self.name, args,
+                ),
+                NodeType::Simple(args) => format!(
+                    r#"{{
+                                {}::new({})
+                            }}"#,
+                    self.name, args,
+                ),
+                _ => panic!("cannot start with non-user view"),
+            }
         }
     }
 

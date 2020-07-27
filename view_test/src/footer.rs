@@ -1,8 +1,6 @@
 use crate::View;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Footer {}
 
-impl Footer {
-    pub fn construct(&self, _children: Option<Vec<View>>) {}
-}
+impl View for Footer {}

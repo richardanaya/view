@@ -1,12 +1,14 @@
 use crate::View;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct VStack {
-    pub children: Vec<crate::View>,
+    pub children: Vec<Box<dyn crate::View>>,
 }
 
 impl VStack {
-    pub fn construct(&mut self, children: Option<Vec<View>>) {
-        self.children = children.unwrap_or(vec![]);
+    pub fn construct(&mut self, children: Vec<Box<dyn View>>) {
+        self.children = children;
     }
 }
+
+impl View for VStack {}

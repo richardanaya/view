@@ -1,6 +1,6 @@
 use crate::View;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Button {
     pub text: String,
     pub style: u8,
@@ -8,8 +8,13 @@ pub struct Button {
 }
 
 impl Button {
-    pub fn construct(&self, _children: Option<Vec<View>>) {}
-    pub fn on_click(&mut self, _f: impl Fn() -> ()) {
+    pub fn on_click(&mut self, _f: impl Fn()) {
         self.num_click_handlers += 1;
     }
+
+    pub fn construct(&mut self, _children: Vec<Box<dyn View>>) {
+        // do something with image
+    }
 }
+
+impl View for Button {}

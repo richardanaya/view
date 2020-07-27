@@ -1,6 +1,6 @@
 use crate::View;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Image {
     pub path: String,
 }
@@ -11,5 +11,6 @@ impl Image {
             path: s.to_string(),
         }
     }
-    pub fn construct(&self, _children: Option<Vec<View>>) {}
 }
+
+impl View for Image {}
