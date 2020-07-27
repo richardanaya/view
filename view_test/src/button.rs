@@ -9,7 +9,7 @@ pub struct Button {
 
 impl Button {
     pub fn construct(&self, _children: Option<Vec<View>>) {}
-    pub fn on_click(&mut self, _f: Box<dyn Fn() -> ()>) {
+    pub fn on_click(&mut self, _f: impl Fn() -> ()) {
         self.num_click_handlers += 1;
     }
 }

@@ -2,7 +2,7 @@
 
 ```toml
 [dependencies]
-view = "0.1.3"
+view = "0.2"
 ```
 Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views in a non framework specific manner. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some ideas from SwiftUI.
 
@@ -15,7 +15,7 @@ let v = view!{
   VStack {
     Image("company.png") 
     Button(text:"order".to_string(),style:BOLD)
-      .on_click(Box::new(|| do_order())) { 
+      .on_click(|| do_order()) { 
         Image("order_icon.png") 
       }
     For(i in images.iter()) { Image(i) }
@@ -52,7 +52,7 @@ let v = {
                 style: BOLD,
                 ..Default::default()
             };
-            o..on_click(Box::new(|| do_order() })
+            o..on_click(||do_order())
             o.construct({
                 let mut c = Vec::<View>::new();
                 c.push({

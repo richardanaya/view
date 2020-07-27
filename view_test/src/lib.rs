@@ -183,7 +183,7 @@ mod tests {
     fn basic_modification() {
         let o = view! {
             Button
-                .on_click(Box::new(||do_order()))
+                .on_click(||do_order())
         };
         if let View::Button(b) = o {
             assert_eq!(1, b.num_click_handlers);
@@ -196,8 +196,8 @@ mod tests {
     fn basic_modification_2() {
         let o = view! {
             Button
-                .on_click(Box::new(||do_order()))
-                .on_click(Box::new(||do_order()))
+                .on_click(||do_order())
+                .on_click(||do_order())
         };
         if let View::Button(b) = o {
             assert_eq!(2, b.num_click_handlers);
@@ -213,8 +213,8 @@ mod tests {
         let o = view! {
             VStack {
                 Button(text:"order".to_string(),style:BOLD)
-                .on_click(Box::new(||do_order()))
-                .on_click(Box::new(||do_order())){
+                .on_click(||do_order())
+                .on_click(||do_order()){
                     Image("order_icon.png")
                 }
             }
@@ -241,8 +241,8 @@ mod tests {
             VStack {
                 Image("company.png")
                 Button(text:"order".to_string(),style:BOLD)
-                .on_click(Box::new(||do_order()))
-                .on_click(Box::new(||do_order())){
+                .on_click(||do_order())
+                .on_click(||do_order()){
                     Image("order_icon.png")
                 }
                 For(i in images.iter()) { Image(i) }
