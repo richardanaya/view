@@ -32,7 +32,7 @@ let v = view!{
 Below is all the code this macro saves you from writing yourself.
 
 ```rust
-let images = <[_]>::into_vec(box ["coffee.png", "cream.png", "sugar.png"]);
+let images = vec!["coffee.png", "cream.png", "sugar.png"];
 let show_legal = false;
 
 let s = {
