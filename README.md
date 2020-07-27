@@ -108,8 +108,8 @@ let v = {
 ```
 
 This project isn't framework specific, but it does have a few rules:
-* you must specify an enum `View` that contains all views (this is so view containers can efficiently hold a variety of views)
-* views must have a function `fn construct(&mut self, children:Option<Vec<View>>)` implemented somehow
+* components must implement a trait `View` if you want it stored as a container component
+* views that have children must have a function `fn construct(&mut self, children:Vec<Box<View>>)` implemented 
 * views must implement Default trait for property construction (e.g `Button(text:"click me".to_owned())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
@@ -117,15 +117,12 @@ Here's a basic example of implementing these rules, though they can be implement
 
 ```rust
 
-enum View {
-  VStack(VStack)
-  Button(Button)
-}
+trait View {}
 
 #[derive(Default)]
 struct VStack {
   direction: u8,
-  children: Vec<View>
+  children: Vec<Box<View>>
 }
 
 impl VStack {
@@ -133,10 +130,12 @@ impl VStack {
     VStack{ direction:direction, children:vec![] }
   }
   
-  fn construct(&mut self, children:Option<Vec<View>>) { 
+  fn construct(&mut self, children:Vec<Box<View>>) { 
     self.children = children.unwrap();
   }
 }
+
+impl View for VStack {}
 
 #[derive(Default)]
 struct Button {
@@ -148,8 +147,10 @@ impl Button {
     Button{text:text}
   }
   
-  fn construct(&mut self, children:Option<Vec<View>>) {}
+  fn construct(&mut self, children:Vec<Box<View>>) {}
 }
+
+impl View for Button {}
 ```
 
 # License
