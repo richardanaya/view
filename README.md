@@ -32,78 +32,80 @@ let v = view!{
 Below is all the code this macro saves you from writing yourself.
 
 ```rust
-let images = vec!["coffee.png", "cream.png", "sugar.png"];
+let images = <[_]>::into_vec(box ["coffee.png", "cream.png", "sugar.png"]);
 let show_legal = false;
 
-let v = {
+let s = {
     let mut o = VStack {
         ..Default::default()
     };
     o.construct({
-        let mut c = Vec::<View>::new();
-        c.push({
-            let mut o = Image::new("company.png");
-            o.construct(None);
-            View::Image(o)
-        });
-        c.push({
+        let mut c = Vec::<Box<View>>::new();
+        c.push(Box::new({ Image::new("company.png") }));
+        c.push(Box::new({
             let mut o = Button {
                 text: "order".to_string(),
                 style: BOLD,
                 ..Default::default()
             };
-            o..on_click(||do_order())
+            o.on_click(|| do_order());
+            o.on_click(|| do_order());
             o.construct({
-                let mut c = Vec::<View>::new();
-                c.push({
-                    let mut o = Image::new("order_icon.png");
-                    o.construct(None);
-                    View::Image(o)
-                });
-                Some(c)
+                let mut c = Vec::<Box<View>>::new();
+                c.push(Box::new({ Image::new("order_icon.png") }));
+                c
             });
-            View::Button(o)
-        });
+            o
+        }));
         for i in images.iter() {
-            c.append(
-                &mut ({
-                    let mut c = Vec::<View>::new();
-                    c.push({
-                        let mut o = Image::new(i);
-                        o.construct(None);
-                        View::Image(o)
-                    });
-                    Some(c)
-                })
-                .unwrap(),
-            );
+            c.append(&mut {
+                let mut c = Vec::<Box<View>>::new();
+                c.push(Box::new({ Image::new(i) }));
+                c
+            });
         }
-        if show_coupon {
-            c.append(
-                &mut ({
-                    let mut c = Vec::<View>::new();
-                    c.push({
-                        let mut o = Coupon {
-                            ..Default::default()
-                        };
-                        o.construct(None);
-                        View::Coupon(o)
-                    });
-                    Some(c)
-                })
-                .unwrap(),
-            )
-        }
-        c.push({
-            let mut o = Legal {
+        c.push(Box::new({
+            Footer {
                 ..Default::default()
-            };
-            o.construct(None);
-            View::Legal(o)
-        });
-        Some(c)
+            }
+        }));
+        if show_legal {
+            c.append(&mut {
+                let mut c = Vec::<Box<View>>::new();
+                c.push(Box::new({
+                    Legal {
+                        ..Default::default()
+                    }
+                }));
+                c
+            })
+        }
+        c
     });
-    View::VStack(o)
+    o
+};
+{
+    match (&6, &s.children.len()) {
+        (left_val, right_val) => {
+            if !(*left_val == *right_val) {
+                {
+                    ::std::rt::begin_panic_fmt(&::core::fmt::Arguments::new_v1(
+                        &[
+                            "assertion failed: `(left == right)`\n  left: `",
+                            "`,\n right: `",
+                            "`",
+                        ],
+                        &match (&&*left_val, &&*right_val) {
+                            (arg0, arg1) => [
+                                ::core::fmt::ArgumentV1::new(arg0, ::core::fmt::Debug::fmt),
+                                ::core::fmt::ArgumentV1::new(arg1, ::core::fmt::Debug::fmt),
+                            ],
+                        },
+                    ))
+                }
+            }
+        }
+    }
 };
 ```
 
