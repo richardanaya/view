@@ -84,29 +84,6 @@ let s = {
     });
     o
 };
-{
-    match (&6, &s.children.len()) {
-        (left_val, right_val) => {
-            if !(*left_val == *right_val) {
-                {
-                    ::std::rt::begin_panic_fmt(&::core::fmt::Arguments::new_v1(
-                        &[
-                            "assertion failed: `(left == right)`\n  left: `",
-                            "`,\n right: `",
-                            "`",
-                        ],
-                        &match (&&*left_val, &&*right_val) {
-                            (arg0, arg1) => [
-                                ::core::fmt::ArgumentV1::new(arg0, ::core::fmt::Debug::fmt),
-                                ::core::fmt::ArgumentV1::new(arg1, ::core::fmt::Debug::fmt),
-                            ],
-                        },
-                    ))
-                }
-            }
-        }
-    }
-};
 ```
 
 This project isn't framework specific, but it does have a few rules:
