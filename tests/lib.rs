@@ -181,3 +181,18 @@ fn full() {
 
     assert_eq!(6, s.children.len());
 }
+
+#[test]
+fn nested() {
+    let img = view! {
+        Image("company.png")
+    };
+
+    let s = view! {
+        VStack {
+            img
+        }
+    };
+
+    assert_eq!(1, s.children.len());
+}

@@ -9,6 +9,7 @@ type PeekableTokenStream = Peekable<proc_macro::token_stream::IntoIter>;
 #[derive(Debug)]
 enum NodeType {
     Empty,
+    Var,
     If(String),
     For(String),
     Simple(String),
@@ -236,7 +237,15 @@ impl Node {
             node_name = Some(name.to_string());
         }
         if let Some(name) = node_name {
-            if name == "If" {
+            if name.chars().next().unwrap().is_lowercase() {
+                let e = Node {
+                    name,
+                    node_type: NodeType::Var,
+                    modifiers: None,
+                    children: None,
+                };
+                Ok((e, input))
+            } else if name == "If" {
                 Node::parse_if_view(input)
             } else if name == "For" {
                 Node::parse_for_view(input)
@@ -338,6 +347,12 @@ impl Node {
                     }}"#,
                 self.name, args, mods, compiled_children
             ),
+            NodeType::Var => format!(
+                r#"{{
+                        {}
+                    }}"#,
+                self.name
+            ),
             _ => panic!("cannot start with non-user view"),
         }
     }
@@ -347,6 +362,7 @@ impl Node {
             NodeType::Empty => self.compile_user_node(),
             NodeType::Simple(_) => self.compile_user_node(),
             NodeType::Params(_) => self.compile_user_node(),
+            NodeType::Var => self.compile_user_node(),
             _ => panic!("cannot start with non-user view"),
         }
     }
