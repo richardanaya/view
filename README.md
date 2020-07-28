@@ -2,7 +2,7 @@
 
 ```toml
 [dependencies]
-view = "0.2"
+view = "0.3"
 ```
 Constructing view heirarchies in Rust is a bit tedious. This is a macro for constructing views in a non framework specific manner. It's more struct oriented compared to a technology like JSX and borrows in broad strokes some ideas from SwiftUI.
 
@@ -82,8 +82,7 @@ let s = {
 ```
 
 This project isn't framework specific, but it does have a few rules:
-* components must implement a trait `View` if you want it stored as a container component
-* views that have children must have a function `fn construct(&mut self, children:Vec<Box<View>>)` implemented 
+* views that have children must have a function `add_child` implemented 
 * views must implement Default trait for property construction (e.g `Button(text:"click me".to_owned())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
