@@ -299,7 +299,7 @@ impl Node {
                             args, if_children
                         )
                     }
-                    _ => format!("o.add_view_child(Box::new({}));\n", x.compile()),
+                    _ => format!("o.add_view_child({});\n", x.compile()),
                 })
                 .collect::<Vec<String>>()
                 .join("\n");

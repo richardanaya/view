@@ -12,7 +12,7 @@ impl Button {
         self.num_click_handlers += 1;
     }
 
-    pub fn add_view_child<'a, T>(&'a mut self, _child: Box<T>)
+    pub fn add_view_child<'a, T>(&'a mut self, _child: T)
     where
         T: 'static + View,
     {

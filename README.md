@@ -39,11 +39,11 @@ let s = {
   let mut o = VStack {
       ..Default::default()
   };
-  o.add_view_child(Box::new({
+  o.add_view_child({
       let mut o = Image::new("company.png");
       o
-  }));
-  o.add_view_child(Box::new({
+  });
+  o.add_view_child({
       let mut o = Button {
           text: "order".to_string(),
           style: BOLD,
@@ -51,31 +51,31 @@ let s = {
       };
       o.on_click(|| do_order());
       o.on_click(|| do_order());
-      o.add_view_child(Box::new({
+      o.add_view_child({
           let mut o = Image::new("order_icon.png");
           o
-      }));
+      });
       o
-  }));
+  });
   for i in images.iter() {
-      o.add_view_child(Box::new({
+      o.add_view_child({
           let mut o = Image::new(i);
           o
-      }));
+      });
   }
-  o.add_view_child(Box::new({
+  o.add_view_child({
       let mut o = Footer {
           ..Default::default()
       };
       o
-  }));
+  });
   if show_legal {
-      o.add_view_child(Box::new({
+      o.add_view_child({
           let mut o = Legal {
               ..Default::default()
           };
           o
-      }));
+      });
   }
   o
 };
