@@ -83,7 +83,7 @@ let s = {
 
 This project isn't framework specific, but it does have a few rules:
 * views that have children must have a function `add_view_child` implemented 
-* views must implement Default trait for property construction (e.g `Button(text:"click me".to_owned())` )
+* views must implement Default trait for property construction (e.g `Button(text:"click me".to_string())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
 Here's a basic example of implementing these rules, though they can be implemented in any way you choose.
