@@ -1,4 +1,4 @@
-use crate::View;
+use super::View;
 
 #[derive(Default)]
 pub struct Image {
