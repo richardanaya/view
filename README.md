@@ -86,7 +86,7 @@ This project isn't framework specific, but it does have a few rules:
 * views must implement Default trait for property construction (e.g `Button(text:"click me".to_string())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
-Here's a basic example of implementing these rules, though they can be implemented in any way you choose.
+Here's a basic example of implementing these rules, though they can be implemented in any way you choose with any trait you like.
 
 ```rust
 
