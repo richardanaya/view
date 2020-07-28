@@ -36,53 +36,48 @@ let images = vec!["coffee.png", "cream.png", "sugar.png"];
 let show_legal = false;
 
 let s = {
-    let mut o = VStack {
-        ..Default::default()
-    };
-    o.construct({
-        let mut c = Vec::<Box<View>>::new();
-        c.push(Box::new({ Image::new("company.png") }));
-        c.push(Box::new({
-            let mut o = Button {
-                text: "order".to_string(),
-                style: BOLD,
-                ..Default::default()
-            };
-            o.on_click(|| do_order());
-            o.on_click(|| do_order());
-            o.construct({
-                let mut c = Vec::<Box<View>>::new();
-                c.push(Box::new({ Image::new("order_icon.png") }));
-                c
-            });
-            o
-        }));
-        for i in images.iter() {
-            c.append(&mut {
-                let mut c = Vec::<Box<View>>::new();
-                c.push(Box::new({ Image::new(i) }));
-                c
-            });
-        }
-        c.push(Box::new({
-            Footer {
-                ..Default::default()
-            }
-        }));
-        if show_legal {
-            c.append(&mut {
-                let mut c = Vec::<Box<View>>::new();
-                c.push(Box::new({
-                    Legal {
-                        ..Default::default()
-                    }
-                }));
-                c
-            })
-        }
-        c
-    });
-    o
+  let mut o = VStack {
+      ..Default::default()
+  };
+  o.add_child(Box::new({
+      let mut o = Image::new("company.png");
+      o
+  }));
+  o.add_child(Box::new({
+      let mut o = Button {
+          text: "order".to_string(),
+          style: BOLD,
+          ..Default::default()
+      };
+      o.on_click(|| do_order());
+      o.on_click(|| do_order());
+      o.add_child(Box::new({
+          let mut o = Image::new("order_icon.png");
+          o
+      }));
+      o
+  }));
+  for i in images.iter() {
+      o.add_child(Box::new({
+          let mut o = Image::new(i);
+          o
+      }));
+  }
+  o.add_child(Box::new({
+      let mut o = Footer {
+          ..Default::default()
+      };
+      o
+  }));
+  if show_legal {
+      o.add_child(Box::new({
+          let mut o = Legal {
+              ..Default::default()
+          };
+          o
+      }));
+  }
+  o
 };
 ```
 
