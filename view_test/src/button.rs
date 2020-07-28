@@ -12,8 +12,11 @@ impl Button {
         self.num_click_handlers += 1;
     }
 
-    pub fn construct(&mut self, _children: Vec<Box<dyn View>>) {
-        // do something with image
+    pub fn add_view_child<'a, T>(&'a mut self, _child: Box<T>)
+    where
+        T: 'static + View,
+    {
+        //self.children.push(t);
     }
 }
 

@@ -39,11 +39,11 @@ let s = {
   let mut o = VStack {
       ..Default::default()
   };
-  o.add_child(Box::new({
+  o.add_view_child(Box::new({
       let mut o = Image::new("company.png");
       o
   }));
-  o.add_child(Box::new({
+  o.add_view_child(Box::new({
       let mut o = Button {
           text: "order".to_string(),
           style: BOLD,
@@ -51,26 +51,26 @@ let s = {
       };
       o.on_click(|| do_order());
       o.on_click(|| do_order());
-      o.add_child(Box::new({
+      o.add_view_child(Box::new({
           let mut o = Image::new("order_icon.png");
           o
       }));
       o
   }));
   for i in images.iter() {
-      o.add_child(Box::new({
+      o.add_view_child(Box::new({
           let mut o = Image::new(i);
           o
       }));
   }
-  o.add_child(Box::new({
+  o.add_view_child(Box::new({
       let mut o = Footer {
           ..Default::default()
       };
       o
   }));
   if show_legal {
-      o.add_child(Box::new({
+      o.add_view_child(Box::new({
           let mut o = Legal {
               ..Default::default()
           };
@@ -82,7 +82,7 @@ let s = {
 ```
 
 This project isn't framework specific, but it does have a few rules:
-* views that have children must have a function `add_child` implemented 
+* views that have children must have a function `add_view_child` implemented 
 * views must implement Default trait for property construction (e.g `Button(text:"click me".to_owned())` )
 * views must have a 'new' constructor function for simple construction (e.g `Button("click me")` )
 
@@ -103,8 +103,11 @@ impl VStack {
     VStack{ direction:direction, children:vec![] }
   }
   
-  fn construct(&mut self, children:Vec<Box<View>>) { 
-    self.children = children.unwrap();
+  fn add_view_child<'a, T>(&'a mut self, child: Box<T>)
+  where
+      T: 'static + View,
+  {
+      self.children.push(child);
   }
 }
 
@@ -119,8 +122,6 @@ impl Button {
   fn new(text:String) -> Self {
     Button{text:text}
   }
-  
-  fn construct(&mut self, children:Vec<Box<View>>) {}
 }
 
 impl View for Button {}

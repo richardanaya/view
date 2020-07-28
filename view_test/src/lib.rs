@@ -12,6 +12,8 @@ pub use vstack::VStack;
 
 pub trait View {}
 
+use view::*;
+
 #[cfg(test)]
 mod tests {
     use crate::*;
@@ -70,19 +72,17 @@ mod tests {
         assert_eq!(2, v.children.len());
     }
 
-
     #[test]
     fn basic_if_empty() {
         let v: VStack = view! {
             VStack {
                 If(false) {
-                    
+
                 }
             }
         };
         assert_eq!(0, v.children.len());
     }
-
 
     #[test]
     fn basic_if() {

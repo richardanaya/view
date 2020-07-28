@@ -6,8 +6,11 @@ pub struct VStack {
 }
 
 impl VStack {
-    pub fn construct(&mut self, children: Vec<Box<dyn View>>) {
-        self.children = children;
+    pub fn add_view_child<'a, T>(&'a mut self, child: Box<T>)
+    where
+        T: 'static + View,
+    {
+        self.children.push(child);
     }
 }
 
