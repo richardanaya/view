@@ -10,6 +10,7 @@ This example shows everything that's possible
 ```rust
 let images = vec!["coffee.png","cream.png","sugar.png"];
 let show_coupon = false;
+let coupon = getTodaysCoupon();
 ​
 let v = view!{
   VStack {
@@ -19,7 +20,7 @@ let v = view!{
         Image("order_icon.png") 
       }
     For(i in images.iter()) { Image(i) }
-    If(show_coupon) { Coupon }
+    If(show_coupon) { coupon }
     Legal
   }
 };
